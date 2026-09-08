@@ -18,3 +18,10 @@
 - Created SQL migration script `001_initial_schema.sql` for database initialization.
 - Implemented Row Level Security (RLS) policies to ensure public read-only access for content and strict privacy for analytics.
 - Documented the setup process for the Supabase project.
+
+## [2026-09-08] - Stage 5: Django Backend Scaffold
+- Created Django apps: `content`, `analytics`, and `accounts`.
+- Configured `settings.py` to use `django-environ` for environment-based configuration.
+- Integrated Django REST Framework (DRF) and `django-cors-headers`.
+- Configured PostgreSQL database connectivity via `DATABASE_URL`.
+- Verified system health using `python manage.py check`.
