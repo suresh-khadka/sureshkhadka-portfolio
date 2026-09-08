@@ -114,3 +114,13 @@
 - Implemented scroll-depth calculation to measure actual article consumption.
 - Wired all frontend tracking events to the `/api/track/` backend endpoints.
 - Ensured anonymous tracking via UUID session IDs persisted in localStorage.
+
+## [2026-09-08] - Stage 17: Admin Dashboard: Single-Click Content Manager
+- Implemented a secure Admin Portal with a `ProtectedRoute` wrapper.
+- Built a complete Login system with JWT token storage and auto-refresh handling.
+- Developed a tabbed Admin Dashboard for seamless switching between content managers.
+- Created the `ProjectManager` for full CRUD operations on projects, including Supabase image upload integration.
+- Developed the `BlogManager` for managing posts and tags, including draft/publish toggles.
+- Implemented the `SkillManager` for organizing technical skills by category.
+- Built the `LinkManager` for managing social and external professional links.
+- integrated real-time API feedback (loading states, success/error alerts) for all admin actions.

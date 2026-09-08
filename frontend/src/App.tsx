@@ -11,6 +11,7 @@ import Skills from './pages/Skills';
 import Contact from './pages/Contact';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -27,7 +28,10 @@ function App() {
           <Route path="skills" element={<Skills />} />
           <Route path="contact" element={<Contact />} />
           <Route path="admin/login" element={<AdminLogin />} />
-          <Route path="admin/dashboard" element={<AdminDashboard />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="admin/dashboard" element={<AdminDashboard />} />
+          </Route>
         </Route>
       </Routes>
     </Router>
