@@ -3,9 +3,10 @@ import { ProjectManager } from '../components/admin/ProjectManager';
 import { BlogManager } from '../components/admin/BlogManager';
 import { SkillManager } from '../components/admin/SkillManager';
 import { LinkManager } from '../components/admin/LinkManager';
+import { AnalyticsManager } from '../components/admin/AnalyticsManager';
 import { Button } from '../components/Button';
 
-type Tab = 'projects' | 'blogs' | 'skills' | 'links';
+type Tab = 'projects' | 'blogs' | 'skills' | 'links' | 'analytics';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>('projects');
@@ -15,14 +16,15 @@ export default function AdminDashboard() {
     { id: 'blogs', label: 'Blog Posts' },
     { id: 'skills', label: 'Skills' },
     { id: 'links', label: 'Social Links' },
+    { id: 'analytics', label: 'Analytics' },
   ];
 
   return (
     <div className="page-container">
       <header className="flex justify-between items-center mb-12">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Content Manager</h1>
-          <p className="text-text_muted">Update your portfolio data in real-time</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
+          <p className="text-text_muted">Manage your portfolio and track performance</p>
         </div>
         <Button
           variant="outline"
@@ -54,6 +56,7 @@ export default function AdminDashboard() {
         {activeTab === 'blogs' && <BlogManager />}
         {activeTab === 'skills' && <SkillManager />}
         {activeTab === 'links' && <LinkManager />}
+        {activeTab === 'analytics' && <AnalyticsManager />}
       </div>
     </div>
   );
