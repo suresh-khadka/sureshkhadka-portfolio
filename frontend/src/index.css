@@ -19,10 +19,9 @@ body {
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent body scroll, let snap-container handle it */
 }
 
-/* Single Page Scroll Snap */
+/* Single Page Scroll Snap - ONLY applied to the container on the Home page */
 .snap-container {
   height: 100vh; 
   overflow-y: auto;

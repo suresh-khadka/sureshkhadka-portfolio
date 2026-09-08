@@ -16,6 +16,7 @@ class Skill(models.Model):
     category = models.ForeignKey(SkillCategory, on_delete=models.CASCADE, related_name='skills')
     name = models.CharField(max_length=100)
     proficiency_level = models.CharField(max_length=50)
+    proficiency = models.IntegerField(default=0)
     icon_url = models.TextField(blank=True, null=True)
 
     def __str__(self):

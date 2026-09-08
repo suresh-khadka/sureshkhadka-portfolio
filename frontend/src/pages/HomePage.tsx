@@ -19,6 +19,7 @@ interface Skill {
   category_name: string;
   proficiency_level: string;
   icon_url: string;
+  proficiency: number;
 }
 
 const SectionWrapper = ({ id, children, title, subtitle }: { id: string, children: React.ReactNode, title?: string, subtitle?: string }) => {
@@ -43,6 +44,53 @@ const SectionWrapper = ({ id, children, title, subtitle }: { id: string, childre
         {children}
       </motion.div>
     </section>
+  );
+};
+
+const SkillCard = ({ skill }: { skill: Skill }) => {
+  return (
+    <motion.div
+      className="relative group w-24 h-24 md:w-28 md:h-28 mx-auto cursor-pointer"
+      whileHover="hover"
+      initial="initial"
+    >
+      {/* Circular Background */}
+      <div className="absolute inset-0 rounded-full bg-primary border-2 border-slate-200 group-hover:border-accent transition-colors duration-300 shadow-sm group-hover:shadow-md" />
+
+      {/* Icon / Percentage Content */}
+      <div className="absolute inset-0 flex items-center justify-center p-2">
+        <motion.div
+          variants={{
+            initial: { opacity: 1, scale: 1, rotate: 0 },
+            hover: { opacity: 0, scale: 0.5, rotate: -90 }
+        }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center justify-center w-full h-full"
+        >
+          <img
+            src={skill.icon_url || 'https://placehold.co/64'}
+            alt={skill.name}
+            className="w-10 h-10 md:w-12 md:h-12 object-contain"
+          />
+        </motion.div>
+
+        <motion.div
+          variants={{
+            initial: { opacity: 0, scale: 0.5, rotate: 90 },
+            hover: { opacity: 1, scale: 1, rotate: 0 }
+        }}
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 flex flex-col items-center justify-center text-center"
+        >
+          <span className="text-lg md:text-xl font-bold text-accent">{skill.proficiency}%</span>
+        </motion.div>
+      </div>
+
+      {/* Tooltip/Label */}
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-max text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <span className="text-xs font-bold text-text-main whitespace-nowrap">{skill.name}</span>
+      </div>
+    </motion.div>
   );
 };
 
@@ -154,20 +202,10 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {skillCategories.map(category => (
               <div key={category} className="bg-secondary p-8 rounded-3xl border border-slate-200 shadow-lg">
-                <h3 className="text-2xl font-bold text-text-main mb-6 border-b border-slate-200 pb-2">{category}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <h3 className="text-2xl font-bold text-text-main mb-12 text-center border-b border-slate-200 pb-4">{category}</h3>
+                <div className="flex flex-wrap justify-center gap-8 md:gap-12">
                   {skills.filter(s => s.category_name === category).map(skill => (
-                    <div key={skill.id} className="flex items-center gap-4 p-3 rounded-xl bg-primary border border-slate-200">
-                      <img
-                        src={skill.icon_url || 'https://placehold.co/32'}
-                        alt={skill.name}
-                        className="w-8 h-8 rounded-md object-contain"
-                      />
-                      <div className="flex-1">
-                        <div className="text-text-main font-medium">{skill.name}</div>
-                        <div className="text-xs text-text_muted">{skill.proficiency_level}</div>
-                      </div>
-                    </div>
+                    <SkillCard key={skill.id} skill={skill} />
                   ))}
                 </div>
               </div>

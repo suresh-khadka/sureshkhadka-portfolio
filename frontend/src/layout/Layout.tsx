@@ -29,7 +29,7 @@ const Layout = () => {
     sections.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
-  }, []);
+  }, [location.pathname]);
 
   const handleScroll = (id: string) => {
     if (location.pathname !== '/') {
@@ -52,8 +52,8 @@ const Layout = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-primary text-text-main overflow-hidden">
-      <nav className="flex items-center justify-between px-6 py-4 bg-primary/80 backdrop-blur-md z-50 border-b border-slate-200 shrink-0">
+    <div className="min-h-screen bg-primary text-text-main">
+      <nav className="flex items-center justify-between px-6 py-4 bg-primary/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
         <div className="text-xl font-bold text-text-main">
           <Link to="/" className="hover:text-accent transition-colors">Suresh Khadka</Link>
         </div>
@@ -85,11 +85,11 @@ const Layout = () => {
         </ul>
       </nav>
 
-      <main className="flex-1 overflow-hidden relative">
+      <main>
         <Outlet />
       </main>
 
-      <footer className="py-4 border-t border-slate-200 text-center text-text_muted text-xs shrink-0">
+      <footer className="py-8 border-t border-slate-200 text-center text-text_muted text-sm">
         <p>&copy; {new Date().getFullYear()} Suresh Khadka. Built with React & Django.</p>
       </footer>
     </div>
