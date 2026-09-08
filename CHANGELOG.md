@@ -13,3 +13,8 @@
 - Designed full PostgreSQL schema in `DATABASE_SCHEMA.md`.
 - Defined tables for projects, skills, blogs, tags, links, and analytics.
 - Established indexing strategy for high-performance analytics queries.
+
+## [2026-09-08] - Stage 4: Supabase Project Setup
+- Created SQL migration script `001_initial_schema.sql` for database initialization.
+- Implemented Row Level Security (RLS) policies to ensure public read-only access for content and strict privacy for analytics.
+- Documented the setup process for the Supabase project.
