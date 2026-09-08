@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SkillCategory, Skill, Project, Tag, BlogPost, Link
+from .models import SkillCategory, Skill, Project, Tag, Blog, BlogSection, BlogCell, BlogCellOutput, Link
 
 class SkillCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,12 +23,32 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tag
         fields = ['id', 'name', 'slug']
 
-class BlogPostSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
+class BlogCellOutputSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCellOutput
+        fields = ['text_output', 'error_output', 'image_output']
+
+class BlogCellSerializer(serializers.ModelSerializer):
+    output = BlogCellOutputSerializer(read_only=True)
 
     class Meta:
-        model = BlogPost
-        fields = ['id', 'title', 'slug', 'content', 'cover_image_url', 'published_at', 'tags']
+        model = BlogCell
+        fields = ['id', 'cell_type', 'content', 'language', 'order', 'output']
+
+class BlogSectionSerializer(serializers.ModelSerializer):
+    cells = BlogCellSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = BlogSection
+        fields = ['id', 'title', 'order', 'cells']
+
+class BlogSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
+    sections = BlogSectionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'slug', 'intro', 'cover_image_url', 'published_at', 'is_draft', 'tags', 'sections']
 
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SkillCategory, Skill, Project, Tag, BlogPost, Link
+from .models import SkillCategory, Skill, Project, Tag, Blog, BlogSection, BlogCell, BlogCellOutput, Link
 
 @admin.register(SkillCategory)
 class SkillCategoryAdmin(admin.ModelAdmin):
@@ -20,12 +20,24 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
     prepopulated_fields = {'slug': ('name',)}
 
-@admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'published_at', 'is_draft')
     list_filter = ('is_draft',)
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal = ('tags',)
+
+@admin.register(BlogSection)
+class BlogSectionAdmin(admin.ModelAdmin):
+    list_display = ('title', 'blog', 'order')
+
+@admin.register(BlogCell)
+class BlogCellAdmin(admin.ModelAdmin):
+    list_display = ('section', 'cell_type', 'order')
+
+@admin.register(BlogCellOutput)
+class BlogCellOutputAdmin(admin.ModelAdmin):
+    list_display = ('cell',)
 
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):

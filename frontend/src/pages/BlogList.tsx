@@ -73,7 +73,7 @@ export default function BlogList() {
                 </div>
                 <h3 className="text-xl font-bold text-text-main mb-2 group-hover:text-accent transition-colors">{blog.title}</h3>
                 <p className="text-text_muted text-sm mb-6 line-clamp-2">
-                  {blog.content.substring(0, 150)}...
+                  {blog.content ? blog.content.substring(0, 150) : 'No content available'}...
                 </p>
                 <Link 
                   to={`/blogs/${blog.slug}`} 

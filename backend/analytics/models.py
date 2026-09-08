@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from content.models import BlogPost
+from content.models import Blog
 
 class VisitorSession(models.Model):
     session_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -22,7 +22,7 @@ class PageView(models.Model):
         return f"{self.path} at {self.timestamp}"
 
 class BlogReadEvent(models.Model):
-    blog = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='read_events')
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='read_events')
     session = models.ForeignKey(VisitorSession, on_delete=models.SET_NULL, null=True, related_name='blog_read_events')
     seconds_spent = models.IntegerField()
     scroll_depth = models.IntegerField()
