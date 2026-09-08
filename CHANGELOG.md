@@ -32,3 +32,10 @@
 - Registered all models in the Django Admin for internal management.
 - Generated initial migration files.
 - Updated `ARCHITECTURE.md` to specify `managed = True` as the migration strategy.
+
+## [2026-09-08] - Stage 7: Single-Admin Auth System
+- Implemented JWT-based authentication using `djangorestframework-simplejwt`.
+- Configured `SECRET_KEY` and `JWT_SECRET` for secure token signing.
+- Created `IsOwnerAdmin` custom permission class to protect write operations.
+- Set up login and token refresh endpoints (`/api/accounts/login/` and `/api/accounts/token/refresh/`).
+- Added a management command `seed_admin` to create the single administrative user.
