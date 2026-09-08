@@ -1,6 +1,6 @@
 from rest_framework import generics
 from .models import Project, Skill, BlogPost, Link, Tag
-from .serializers import ProjectSerializer, SkillSerializer, BlogPostSerializer, LinkSerializer
+from .serializers import ProjectSerializer, SkillSerializer, BlogPostSerializer, LinkSerializer, TagSerializer
 from .permissions import IsAdminOrReadOnly
 
 class ProjectListCreateView(generics.ListCreateAPIView):

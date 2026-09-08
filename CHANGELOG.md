@@ -68,3 +68,15 @@
 - Created "Page View Counts" for identifying top-performing pages.
 - Implemented "Active Sessions" view to monitor users active within the last 15 minutes.
 - Integrated `IsOwnerAdmin` permission to ensure analytics data is private.
+
+## [2026-09-08] - Stage 12: Backend Automated Testing
+- Set up a comprehensive test suite using `pytest` and `pytest-django`.
+- Configured a dedicated `tests_settings.py` to use an in-memory SQLite database for fast, isolated tests.
+- Implemented test cases for:
+    - Public read-only access to projects, blogs, and skills.
+    - Strict exclusion of draft blog posts from public view.
+    - Security of CRUD endpoints (rejecting unauthenticated write attempts).
+    - Correctness of administrative create, update, and delete operations.
+    - End-to-end validation of analytics tracking (page views, blog reads).
+    - Correctness of analytics aggregation logic for the admin dashboard.
+- Verified 100% pass rate across all implemented backend features.
