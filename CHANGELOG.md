@@ -96,3 +96,13 @@
 - Created a Global Layout with a responsive navigation bar and footer.
 - Configured the main routing system with stubs for all required pages (Home, About, Projects, Blogs, Skills, Journey, Contact, Admin).
 - Migrated the project to TypeScript (`.tsx`) for better type safety.
+
+## [2026-09-08] - Stage 15: Public Pages, Wired to Live API
+- Integrated Tailwind CSS for a professional, dark-themed design.
+- Developed the Home page with a high-impact hero section and "Featured Projects" grid.
+- Implemented the Projects and Project Detail pages, featuring a case-study layout and tech-stack tags.
+- Built the Blog List and Detail pages, including tag-based filtering and a a clean reading experience.
+- Developed the Skills page with category-based grouping and proficiency indicators.
+- Created the About page and a dedicated Learning Journey timeline.
+- Implemented a functional Contact page with a simulated submission flow.
+- Wired all public pages to the Django REST API using the `apiClient`.
