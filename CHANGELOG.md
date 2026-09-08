@@ -106,3 +106,11 @@
 - Created the About page and a dedicated Learning Journey timeline.
 - Implemented a functional Contact page with a simulated submission flow.
 - Wired all public pages to the Django REST API using the `apiClient`.
+
+## [2026-09-08] - Stage 16: Frontend Analytics Instrumentation
+- Implemented `useAnalytics` hook for automated session management and pageview tracking.
+- Integrated a periodic heartbeat mechanism (every 30s) to track active session durations.
+- Added detailed engagement tracking to `BlogDetail` using `visibilitychange` events.
+- Implemented scroll-depth calculation to measure actual article consumption.
+- Wired all frontend tracking events to the `/api/track/` backend endpoints.
+- Ensured anonymous tracking via UUID session IDs persisted in localStorage.

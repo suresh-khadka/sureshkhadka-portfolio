@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { useAnalytics } from '../hooks/useAnalytics';
 
 const Layout = () => {
+  useAnalytics();
+
   return (
     <div className="app-layout">
       <nav className="main-nav">
