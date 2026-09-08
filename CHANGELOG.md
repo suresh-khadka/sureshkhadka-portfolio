@@ -46,3 +46,10 @@
 - Added tag-based filtering for the blog list.
 - Ensured draft blog posts are excluded from public view.
 - Integrated content URLs into the main API routing.
+
+## [2026-09-08] - Stage 9: Admin-Only CRUD API
+- Implemented full CRUD (Create, Retrieve, Update, Delete) endpoints for all content resources.
+- Created `IsAdminOrReadOnly` permission to strictly allow write operations only for the admin user.
+- Integrated Supabase Storage for image uploads via a dedicated `/api/upload/` endpoint.
+- Implemented secure file upload utility using the Supabase Python client.
+- Updated API routing to support administrative management of all portfolio entities.
