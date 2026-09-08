@@ -60,3 +60,11 @@
 - Built a heartbeat mechanism (`/api/track/heartbeat/`) to maintain active session durations.
 - Integrated analytics endpoints into the global API routing at `/api/track/`.
 - Added basic input validation and sanitization to protect analytics data.
+
+## [2026-09-08] - Stage 11: Analytics Aggregation API
+- Built admin-only aggregation endpoints to summarize raw tracking data.
+- Implemented "Visitors Over Time" using Django `TruncDate` for daily counts.
+- Developed "Most Read Blogs" view with total read counts and average time spent.
+- Created "Page View Counts" for identifying top-performing pages.
+- Implemented "Active Sessions" view to monitor users active within the last 15 minutes.
+- Integrated `IsOwnerAdmin` permission to ensure analytics data is private.
