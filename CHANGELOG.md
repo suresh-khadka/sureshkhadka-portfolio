@@ -88,3 +88,11 @@
 - Created a `render.yaml` blueprint for automated infrastructure-as-code deployment.
 - Generated `requirements.txt` for production dependency installation.
 - Documented all required production environment variables.
+
+## [2026-09-08] - Stage 14: React + Vite Frontend Scaffold
+- Installed `react-router-dom` and `axios`.
+- Established project directory structure (`/api`, `/components`, `/hooks`, `/pages`, `/store`, `/layout`).
+- Implemented a centralized `apiClient` with JWT interceptors for authentication and automatic token refreshing.
+- Created a Global Layout with a responsive navigation bar and footer.
+- Configured the main routing system with stubs for all required pages (Home, About, Projects, Blogs, Skills, Journey, Contact, Admin).
+- Migrated the project to TypeScript (`.tsx`) for better type safety.
