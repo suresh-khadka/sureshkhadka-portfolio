@@ -6,19 +6,23 @@ const Layout = () => {
   useAnalytics();
 
   return (
-    <div className="app-layout">
-      <nav className="main-nav">
-        <div className="nav-brand">
-          <Link to="/">Suresh Khadka</Link>
+    <div className="app-layout min-h-screen bg-primary text-text-main">
+      <nav className="flex items-center justify-between px-6 py-4 bg-primary/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+        <div className="text-xl font-bold text-white">
+          <Link to="/" className="hover:text-accent transition-colors">Suresh Khadka</Link>
         </div>
-        <ul className="nav-links">
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/projects">Projects</Link></li>
-          <li><Link to="/blogs">Blog</Link></li>
-          <li><Link to="/skills">Skills</Link></li>
-          <li><Link to="/learning">Journey</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
-          <li><Link to="/admin/login" className="admin-link">Admin</Link></li>
+        <ul className="hidden md:flex items-center gap-6">
+          <li><Link to="/about" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">About</Link></li>
+          <li><Link to="/projects" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Projects</Link></li>
+          <li><Link to="/blogs" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Blog</Link></li>
+          <li><Link to="/skills" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Skills</Link></li>
+          <li><Link to="/learning" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Journey</Link></li>
+          <li><Link to="/contact" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Contact</Link></li>
+          <li>
+            <Link to="/admin/login" className="bg-accent text-primary px-3 py-1 rounded-lg text-sm font-bold hover:bg-sky-300 transition-colors">
+              Admin
+            </Link>
+          </li>
         </ul>
       </nav>
 
@@ -26,7 +30,7 @@ const Layout = () => {
         <Outlet />
       </main>
 
-      <footer className="main-footer">
+      <footer className="py-8 border-t border-slate-800 text-center text-text_muted text-sm">
         <p>&copy; {new Date().getFullYear()} Suresh Khadka. Built with React & Django.</p>
       </footer>
     </div>

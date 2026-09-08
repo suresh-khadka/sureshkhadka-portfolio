@@ -1,13 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0f172a;
+  --color-secondary: #1e293b;
+  --color-accent: #38bdf8;
+  --color-text-main: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --font-sans: "Inter", sans-serif;
+}
 
 :root {
   color-scheme: dark;
 }
 
 body {
-  @apply bg-primary text-text_main font-sans;
+  @apply bg-primary text-text-main font-sans;
   margin: 0;
   padding: 0;
 }
@@ -25,5 +32,5 @@ h2 {
 }
 
 p {
-  @apply text-text_muted leading-relaxed mb-4;
+  @apply text-text-muted leading-relaxed mb-4;
 }

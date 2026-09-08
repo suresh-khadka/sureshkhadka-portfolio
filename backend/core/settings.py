@@ -21,7 +21,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+# ALLOWED_HOSTS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -77,8 +78,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db(),
+    "default": env.db(),
 }
+DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

@@ -148,3 +148,10 @@
 - Developed a detailed `QA_CHECKLIST.md` covering all functional and non-functional requirements.
 - Finalized the monorepo structure and verified all project documentation.
 - Project is now ready for production deployment and handoff.
+
+## [2026-09-08] - Hotfix: Frontend Build Issues
+- Fixed syntax error in `SkillManager.tsx` where a stray comment `//` was placed inside an object key.
+- Migrated Tailwind CSS from v3 to v4 configuration to resolve "unknown utility class `bg-primary`" errors.
+- Replaced v3 `@tailwind` directives with v4 `@import "tailwindcss"` and moved custom colors/fonts into an `@theme` block in `index.css`.
+- Cleaned up redundant `tailwind.config.js`.
+- Fixed a typo `w-//full` in `BlogManager.tsx`.

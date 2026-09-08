@@ -137,7 +137,7 @@ export const BlogManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Slug</label>
             <input
-              className="w-//full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
               value={formData.slug}
               onChange={e => setFormData({...formData, slug: e.target.value})}
               required

@@ -74,7 +74,7 @@ export const SkillManager = () => {
     setFormData({
       name: s.name,
       category: s.category,
-      proficiency_//level: s.proficiency_level,
+      proficiency_level: s.proficiency_level,
       icon_url: s.icon_url,
     });
   };
