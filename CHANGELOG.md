@@ -39,3 +39,10 @@
 - Created `IsOwnerAdmin` custom permission class to protect write operations.
 - Set up login and token refresh endpoints (`/api/accounts/login/` and `/api/accounts/token/refresh/`).
 - Added a management command `seed_admin` to create the single administrative user.
+
+## [2026-09-08] - Stage 8: Public Read API
+- Implemented read-only serializers for Projects, Skills, BlogPosts, Tags, and Links.
+- Created public GET endpoints for all content resources.
+- Added tag-based filtering for the blog list.
+- Ensured draft blog posts are excluded from public view.
+- Integrated content URLs into the main API routing.
