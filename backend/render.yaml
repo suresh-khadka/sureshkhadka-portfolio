@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: docker
+    plan: free
+    region: oregon
+    dockerStartCommand: gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        sync: false
+      - key: DEBUG
+        value: "False"
