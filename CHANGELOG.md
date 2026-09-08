@@ -25,3 +25,10 @@
 - Integrated Django REST Framework (DRF) and `django-cors-headers`.
 - Configured PostgreSQL database connectivity via `DATABASE_URL`.
 - Verified system health using `python manage.py check`.
+
+## [2026-09-08] - Stage 6: Django Models + Migrations
+- Implemented Django models for `content` and `analytics` apps matching the schema.
+- Configured UUID primary keys and relationships (including Many-to-Many for BlogPosts and Tags).
+- Registered all models in the Django Admin for internal management.
+- Generated initial migration files.
+- Updated `ARCHITECTURE.md` to specify `managed = True` as the migration strategy.

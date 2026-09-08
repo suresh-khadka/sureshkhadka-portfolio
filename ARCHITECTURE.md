@@ -67,5 +67,5 @@ I have chosen a monorepo structure to simplify development, versioning, and loca
 | `BlogReadEvent` | Blog engagement metrics | `blog_id`, `session_id`, `seconds_spent`, `scroll_depth`, `timestamp` |
 | `VisitorSession` | Unique visitor session | `session_id`, `first_seen`, `last_seen`, `user_agent`, `location_summary` |
 
-## 6. Storage Strategy
-- **Images/Files**: All project thumbnails and blog covers will be stored in a **Supabase Storage Bucket**. The Django backend will handle the upload logic and store the resulting public URLs in the database.
+## 7. Migration Strategy
+- **Database Management**: I have decided to use `managed = True` for Django models. This allows Django to handle schema migrations via its migration framework, which will be the source of truth for the Supabase PostgreSQL database moving forward.
