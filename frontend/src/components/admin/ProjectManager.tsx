@@ -103,15 +103,15 @@ export const ProjectManager = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-700 h-fit">
-        <h3 className="text-xl font-bold text-white mb-6">
+      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-200 h-fit">
+        <h3 className="text-xl font-bold text-text-main mb-6">
           {editingProject ? 'Edit Project' : 'Add New Project'}
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Title</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
               required
@@ -120,7 +120,7 @@ export const ProjectManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Slug</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.slug}
               onChange={e => setFormData({...formData, slug: e.target.value})}
               required
@@ -129,7 +129,7 @@ export const ProjectManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Description</label>
             <textarea
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
               required
@@ -139,7 +139,7 @@ export const ProjectManager = () => {
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Content (Markdown)</label>
             <textarea
               rows={5}
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.content}
               onChange={e => setFormData({...formData, content: e.target.value})}
             />
@@ -147,7 +147,7 @@ export const ProjectManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Stack (comma separated)</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.stack}
               onChange={e => setFormData({...formData, stack: e.target.value})}
             />
@@ -163,12 +163,12 @@ export const ProjectManager = () => {
               />
               <label
                 htmlFor="thumb-upload"
-                className="cursor-pointer bg-slate-700 text-white px-3 py-2 rounded-lg text-sm hover:bg-slate-600 transition-colors"
+                className="cursor-pointer bg-slate-700 text-text-main px-3 py-2 rounded-lg text-sm hover:bg-slate-600 transition-colors"
               >
                 {uploading ? 'Uploading...' : 'Upload Image'}
               </label>
               <input
-                className="flex-1 bg-primary border border-slate-700 rounded-lg px-3 py-2 text-xs text-text_muted"
+                className="flex-1 bg-primary border border-slate-200 rounded-lg px-3 py-2 text-xs text-text_muted"
                 value={formData.thumbnail_url}
                 readOnly
               />
@@ -192,17 +192,17 @@ export const ProjectManager = () => {
 
       <div className="lg:col-span-2 space-y-4">
         {projects.map(p => (
-          <div key={p.id} className="bg-secondary p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+          <div key={p.id} className="bg-secondary p-4 rounded-xl border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img src={p.thumbnail_url || 'https://via.placeholder.com/50'} className="w-12 h-12 rounded-lg object-cover" />
               <div>
-                <div className="text-white font-bold">{p.title}</div>
+                <div className="text-text-main font-bold">{p.title}</div>
                 <div className="text-xs text-text_muted">{p.slug}</div>
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" className="px-3 py-1 text-xs" onClick={() => startEdit(p)}>Edit</Button>
-              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-white" onClick={() => handleDelete(p.slug)}>Delete</Button>
+              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-text-main" onClick={() => handleDelete(p.slug)}>Delete</Button>
             </div>
           </div>
         ))}

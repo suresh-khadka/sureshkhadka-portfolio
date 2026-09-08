@@ -6,7 +6,7 @@ export default function About() {
     <div className="page-container">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div>
-          <h1 className="text-5xl font-bold text-white mb-6">About Me</h1>
+          <h1 className="text-5xl font-bold text-text-main mb-6">About Me</h1>
           <p className="text-lg text-text_muted mb-6">
             I am a passionate AI/ML Engineer and Full-stack Developer with a deep interest in 
             building systems that can learn, adapt, and solve complex real-world problems.
@@ -28,7 +28,7 @@ export default function About() {
 
         <div className="relative">
           <img 
-            src="https://via.placeholder.com/500x600" 
+            src="/profile_01.png" 
             alt="Suresh Khadka" 
             className="rounded-3xl shadow-2xl border-4 border-secondary"
           />

@@ -70,15 +70,15 @@ export default function BlogDetail() {
     };
   }, [blog, startTime]);
 
-  if (loading) return <div className="page-container text-center py-20 text-white">Loading...</div>;
-  if (!blog) return <div className="page-container text-center py-20 text-white">Blog post not found.</div>;
+  if (loading) return <div className="page-container text-center py-20 text-text-main">Loading...</div>;
+  if (!blog) return <div className="page-container text-center py-20 text-text-main">Blog post not found.</div>;
 
   return (
     <div className="page-container">
       <Link to="/blogs" className="text-accent hover:underline mb-8 inline-block">&larr; Back to Blog</Link>
 
       <header className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-white mb-4">{blog.title}</h1>
+        <h1 className="text-5xl font-bold text-text-main mb-4">{blog.title}</h1>
         <div className="flex justify-center gap-4 mb-8">
           <span className="text-text_muted">{new Date(blog.published_at).toLocaleDateString()}</span>
           <span className="text-accent">•</span>
@@ -91,7 +91,7 @@ export default function BlogDetail() {
         <img
           src={blog.cover_image_url || 'https://via.placeholder.com/1200x600'}
           alt={blog.title}
-          className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-2xl border border-slate-700"
+          className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-2xl border border-slate-200"
         />
       </header>
 

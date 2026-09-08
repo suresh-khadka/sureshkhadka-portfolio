@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     <div className="page-container">
       <header className="flex justify-between items-center mb-12">
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
+          <h1 className="text-4xl font-bold text-text-main mb-2">Admin Dashboard</h1>
           <p className="text-text_muted">Manage your portfolio and track performance</p>
         </div>
         <Button

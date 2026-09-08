@@ -36,7 +36,7 @@ export default function BlogList() {
   return (
     <div className="page-container">
       <header className="text-center py-12">
-        <h1 className="text-5xl font-bold text-white mb-4">Insights & Learning</h1>
+        <h1 className="text-5xl font-bold text-text-main mb-4">Insights & Learning</h1>
         <p className="text-text_muted max-w-2xl mx-auto">
           Sharing my thoughts on Machine Learning, AI architecture, and software engineering.
         </p>
@@ -51,7 +51,7 @@ export default function BlogList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {blogs.map(blog => (
-            <div key={blog.id} className="group bg-secondary rounded-2xl overflow-hidden border border-slate-700 hover:border-accent transition-all duration-300 shadow-lg">
+            <div key={blog.id} className="group bg-secondary rounded-2xl overflow-hidden border border-slate-200 hover:border-accent transition-all duration-300 shadow-lg">
               <div className="h-48 overflow-hidden">
                 <img 
                   src={blog.cover_image_url || 'https://via.placeholder.com/400x200'} 
@@ -71,13 +71,13 @@ export default function BlogList() {
                     </Link>
                   ))}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-accent transition-colors">{blog.title}</h3>
+                <h3 className="text-xl font-bold text-text-main mb-2 group-hover:text-accent transition-colors">{blog.title}</h3>
                 <p className="text-text_muted text-sm mb-6 line-clamp-2">
                   {blog.content.substring(0, 150)}...
                 </p>
                 <Link 
                   to={`/blogs/${blog.slug}`} 
-                  className="text-white font-semibold flex items-center gap-2 hover:text-accent transition-colors"
+                  className="text-text-main font-semibold flex items-center gap-2 hover:text-accent transition-colors"
                 >
                   Read Article <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
                 </Link>

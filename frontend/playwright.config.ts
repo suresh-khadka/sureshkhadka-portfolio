@@ -3,11 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
-  forbidOnly: async () => {
-    if (process.env.CI) {
-      throw new Error('Avoid using only in CI');
-    }
-  },
+  forbidOnly: false,
   retries: 0,
   reporter: 'html',
   use: {

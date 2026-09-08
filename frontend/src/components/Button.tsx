@@ -6,9 +6,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = ({ variant = 'primary', className = '', children, ...props }: ButtonProps) => {
   const variants = {
-    primary: 'bg-accent text-primary font-bold hover:bg-sky-300',
-    secondary: 'bg-secondary text-white hover:bg-slate-700',
-    outline: 'border-2 border-accent text-accent hover:bg-accent hover:text-primary',
+    primary: 'bg-accent text-white font-bold hover:bg-sky-600',
+    secondary: 'bg-secondary text-text-main hover:bg-slate-200',
+    outline: 'border-2 border-accent text-accent hover:bg-accent hover:text-white',
   };
 
   return (

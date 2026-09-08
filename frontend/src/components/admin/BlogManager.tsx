@@ -120,15 +120,15 @@ export const BlogManager = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-700 h-fit">
-        <h3 className="text-xl font-bold text-white mb-6">
+      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-200 h-fit">
+        <h3 className="text-xl font-bold text-text-main mb-6">
           {editingBlog ? 'Edit Blog' : 'New Blog Post'}
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Title</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.title}
               onChange={e => setFormData({...formData, title: e.target.value})}
               required
@@ -137,7 +137,7 @@ export const BlogManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Slug</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.slug}
               onChange={e => setFormData({...formData, slug: e.target.value})}
               required
@@ -147,7 +147,7 @@ export const BlogManager = () => {
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Content (Markdown)</label>
             <textarea
               rows={8}
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.content}
               onChange={e => setFormData({...formData, content: e.target.value})}
               required
@@ -160,17 +160,17 @@ export const BlogManager = () => {
               checked={formData.is_draft}
               onChange={e => setFormData({...formData, is_draft: e.target.checked})}
             />
-            <label htmlFor="is-draft" className="text-sm text-white">Keep as draft</label>
+            <label htmlFor="is-draft" className="text-sm text-text-main">Keep as draft</label>
           </div>
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Cover Image</label>
             <div className="flex gap-2">
               <input type="file" id="blog-thumb" className="hidden" onChange={handleUpload} />
-              <label htmlFor="blog-thumb" className="cursor-pointer bg-slate-700 text-white px-3 py-2 rounded-lg text-sm hover:bg-slate-600 transition-colors">
+              <label htmlFor="blog-thumb" className="cursor-pointer bg-slate-700 text-text-main px-3 py-2 rounded-lg text-sm hover:bg-slate-600 transition-colors">
                 {uploading ? 'Uploading...' : 'Upload Image'}
               </label>
               <input
-                className="flex-1 bg-primary border border-slate-700 rounded-lg px-3 py-2 text-xs text-text_muted"
+                className="flex-1 bg-primary border border-slate-200 rounded-lg px-3 py-2 text-xs text-text_muted"
                 value={formData.cover_image_url}
                 readOnly
               />
@@ -178,9 +178,9 @@ export const BlogManager = () => {
           </div>
           <div className="space-y-2">
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Tags</label>
-            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-2 bg-primary rounded-lg border border-slate-700">
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto p-2 bg-primary rounded-lg border border-slate-200">
               {tags.map(tag => (
-                <label key={tag.id} className="flex items-center gap-1 text-xs text-white cursor-pointer">
+                <label key={tag.id} className="flex items-center gap-1 text-xs text-text-main cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.selectedTags.includes(tag.id)}
@@ -214,17 +214,17 @@ export const BlogManager = () => {
 
       <div className="lg:col-span-2 space-y-4">
         {blogs.map(b => (
-          <div key={b.id} className="bg-secondary p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+          <div key={b.id} className="bg-secondary p-4 rounded-xl border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img src={b.cover_image_url || 'https://via.placeholder.com/50'} className="w-12 h-12 rounded-lg object-cover" />
               <div>
-                <div className="text-white font-bold">{b.title} {b.is_draft && <span className="text-xs text-orange-400 font-normal ml-2">(Draft)</span>}</div>
+                <div className="text-text-main font-bold">{b.title} {b.is_draft && <span className="text-xs text-orange-400 font-normal ml-2">(Draft)</span>}</div>
                 <div className="text-xs text-text_muted">{b.slug}</div>
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" className="px-3 py-1 text-xs" onClick={() => startEdit(b)}>Edit</Button>
-              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-white" onClick={() => handleDelete(b.slug)}>Delete</Button>
+              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-text-main" onClick={() => handleDelete(b.slug)}>Delete</Button>
             </div>
           </div>
         ))}

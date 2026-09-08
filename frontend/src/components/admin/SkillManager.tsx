@@ -81,15 +81,15 @@ export const SkillManager = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-700 h-fit">
-        <h3 className="text-xl font-bold text-white mb-6">
+      <div className="lg:col-span-1 bg-secondary p-6 rounded-2xl border border-slate-200 h-fit">
+        <h3 className="text-xl font-bold text-text-main mb-6">
           {editingSkill ? 'Edit Skill' : 'Add New Skill'}
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Skill Name</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.name}
               onChange={e => setFormData({...formData, name: e.target.value})}
               required
@@ -98,7 +98,7 @@ export const SkillManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Category</label>
             <select
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.category}
               onChange={e => setFormData({...formData, category: e.target.value})}
               required
@@ -112,7 +112,7 @@ export const SkillManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Proficiency</label>
             <select
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.proficiency_level}
               onChange={e => setFormData({...formData, proficiency_level: e.target.value})}
               required
@@ -127,7 +127,7 @@ export const SkillManager = () => {
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Icon URL</label>
             <input
-              className="w-full bg-primary border border-slate-700 rounded-lg px-3 py-2 text-white"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
               value={formData.icon_url}
               onChange={e => setFormData({...formData, icon_url: e.target.value})}
             />
@@ -150,17 +150,17 @@ export const SkillManager = () => {
 
       <div className="lg:col-span-2 space-y-4">
         {skills.map(s => (
-          <div key={s.id} className="bg-secondary p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+          <div key={s.id} className="bg-secondary p-4 rounded-xl border border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img src={s.icon_url || 'https://via.placeholder.com/50'} className="w-12 h-12 rounded-lg object-contain" />
               <div>
-                <div className="text-white font-bold">{s.name}</div>
+                <div className="text-text-main font-bold">{s.name}</div>
                 <div className="text-xs text-text_muted">{s.proficiency_level}</div>
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="secondary" className="px-3 py-1 text-xs" onClick={() => startEdit(s)}>Edit</Button>
-              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-white" onClick={() => handleDelete(s.id)}>Delete</Button>
+              <Button variant="outline" className="px-3 py-1 text-xs text-red-400 border-red-400 hover:bg-red-400 hover:text-text-main" onClick={() => handleDelete(s.id)}>Delete</Button>
             </div>
           </div>
         ))}

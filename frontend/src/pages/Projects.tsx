@@ -32,7 +32,7 @@ export default function Projects() {
   return (
     <div className="page-container">
       <header className="text-center py-12">
-        <h1 className="text-5xl font-bold text-white mb-4">Projects</h1>
+        <h1 className="text-5xl font-bold text-text-main mb-4">Projects</h1>
         <p className="text-text_muted max-w-2xl mx-auto">
           A collection of my work in Artificial Intelligence, Machine Learning, and Full-stack development.
         </p>
@@ -47,7 +47,7 @@ export default function Projects() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map(project => (
-            <div key={project.id} className="group bg-secondary rounded-2xl overflow-hidden border border-slate-700 hover:border-accent transition-all duration-300 shadow-lg">
+            <div key={project.id} className="group bg-secondary rounded-2xl overflow-hidden border border-slate-200 hover:border-accent transition-all duration-300 shadow-lg">
               <div className="h-52 overflow-hidden">
                 <img 
                   src={project.thumbnail_url || 'https://via.placeholder.com/400x200'} 
@@ -56,7 +56,7 @@ export default function Projects() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
+                <h3 className="text-xl font-bold text-text-main mb-2">{project.title}</h3>
                 <p className="text-text_muted text-sm mb-4 line-clamp-3">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.stack.map(tech => (
@@ -67,7 +67,7 @@ export default function Projects() {
                 </div>
                 <Link 
                   to={`/projects/${project.slug}`} 
-                  className="inline-block text-white font-semibold hover:text-accent transition-colors"
+                  className="inline-block text-text-main font-semibold hover:text-accent transition-colors"
                 >
                   View Details &rarr;
                 </Link>

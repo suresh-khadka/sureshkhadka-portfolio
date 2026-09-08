@@ -31,20 +31,20 @@ export default function ProjectDetail() {
     fetchProject();
   }, [slug]);
 
-  if (loading) return <div className="page-container text-center py-20 text-white">Loading...</div>;
-  if (!project) return <div className="page-container text-center py-20 text-white">Project not found.</div>;
+  if (loading) return <div className="page-container text-center py-20 text-text-main">Loading...</div>;
+  if (!project) return <div className="page-container text-center py-20 text-text-main">Project not found.</div>;
 
   return (
     <div className="page-container">
       <Link to="/projects" className="text-accent hover:underline mb-8 inline-block">&larr; Back to Projects</Link>
       
       <header className="mb-12">
-        <h1 className="text-5xl font-bold text-white mb-4">{project.title}</h1>
+        <h1 className="text-5xl font-bold text-text-main mb-4">{project.title}</h1>
         <p className="text-xl text-text_muted mb-8 max-w-3xl">{project.description}</p>
         
         <div className="flex gap-4 mb-10">
           {project.github_url && (
-            <a href={project.github_url} target="_blank" rel="noreferrer" className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2">
+            <a href={project.github_url} target="_blank" rel="noreferrer" className="bg-slate-800 text-text-main px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2">
               GitHub Repo
             </a>
           )}
@@ -58,21 +58,21 @@ export default function ProjectDetail() {
         <img 
           src={project.thumbnail_url || 'https://via.placeholder.com/1200x600'} 
           alt={project.title} 
-          className="w-full h-auto rounded-3xl shadow-2xl border border-slate-700"
+          className="w-full h-auto rounded-3xl shadow-2xl border border-slate-200"
         />
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-white mb-6">Case Study</h2>
+          <h2 className="text-2xl font-bold text-text-main mb-6">Case Study</h2>
           <div className="prose prose-invert max-w-none text-text_muted whitespace-pre-wrap">
             {project.content}
           </div>
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-secondary p-6 rounded-2xl border border-slate-700 sticky top-8">
-            <h3 className="text-xl font-bold text-white mb-4">Project Details</h3>
+          <div className="bg-secondary p-6 rounded-2xl border border-slate-200 sticky top-8">
+            <h3 className="text-xl font-bold text-text-main mb-4">Project Details</h3>
             <div className="space-y-4">
               <div>
                 <span className="block text-xs uppercase text-text_muted font-bold mb-1">Tech Stack</span>

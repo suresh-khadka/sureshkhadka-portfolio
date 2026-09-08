@@ -67,26 +67,26 @@ export const AnalyticsManager = () => {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) return <div className="text-white text-center py-10">Loading analytics...</div>;
+  if (loading) return <div className="text-text-main text-center py-10">Loading analytics...</div>;
 
   return (
     <div className="space-y-8">
       {/* Stat Tiles */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
           <div className="text-text_muted text-sm font-bold uppercase mb-1">Total Unique Visitors</div>
-          <div className="text-4xl font-extrabold text-white">{overview?.total_visitors || 0}</div>
+          <div className="text-4xl font-extrabold text-text-main">{overview?.total_visitors || 0}</div>
         </div>
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
           <div className="text-text_muted text-sm font-bold uppercase mb-1">Total Page Views</div>
-          <div className="text-4xl font-extrabold text-white">{overview?.total_page_views || 0}</div>
+          <div className="text-4xl font-extrabold text-text-main">{overview?.total_page_views || 0}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Visitors Over Time Chart */}
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Visitor Traffic (Daily)</h3>
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h3 className="text-xl font-bold text-text-main mb-6">Visitor Traffic (Daily)</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={visitorsOverTime}>
@@ -109,8 +109,8 @@ export const AnalyticsManager = () => {
         </div>
 
         {/* Most Read Blogs Bar Chart */}
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Most Read Blogs</h3>
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h3 className="text-xl font-bold text-text-main mb-6">Most Read Blogs</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mostRead}>
@@ -134,19 +134,19 @@ export const AnalyticsManager = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Page View Table */}
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Top Pages</h3>
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h3 className="text-xl font-bold text-text-main mb-6">Top Pages</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="text-text_muted border-b border-slate-700">
+                <tr className="text-text_muted border-b border-slate-200">
                   <th className="pb-3 font-medium">Path</th>
                   <th className="pb-3 font-medium text-right">Views</th>
                 </tr>
               </thead>
-              <tbody className="text-white">
+              <tbody className="text-text-main">
                 {pageCounts.map((page, i) => (
-                  <tr key={i} className="border-b border-slate-800 last:border-0">
+                  <tr key={i} className="border-b border-slate-300 last:border-0">
                     <td className="py-3 font-mono text-xs">{page.path}</td>
                     <td className="py-3 text-right font-bold">{page.count}</td>
                   </tr>
@@ -157,17 +157,17 @@ export const AnalyticsManager = () => {
         </div>
 
         {/* Active Sessions List */}
-        <div className="bg-secondary p-6 rounded-2xl border border-slate-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Currently Active</h3>
+        <div className="bg-secondary p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <h3 className="text-xl font-bold text-text-main mb-6">Currently Active</h3>
           <div className="space-y-3">
             {activeSessions.length === 0 ? (
               <p className="text-text_muted text-sm italic">No active sessions at the moment.</p>
             ) : (
               activeSessions.map((session, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-primary rounded-lg border border-slate-800">
+                <div key={i} className="flex items-center justify-between p-3 bg-primary rounded-lg border border-slate-300">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <div className="text-xs text-white truncate max-w-[150px]">{session.current_page}</div>
+                    <div className="text-xs text-text-main truncate max-w-[150px]">{session.current_page}</div>
                   </div>
                   <div className="text-[10px] text-text_muted">{session.location || 'Unknown'}</div>
                 </div>

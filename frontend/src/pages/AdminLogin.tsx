@@ -34,9 +34,9 @@ export default function AdminLogin() {
 
   return (
     <div className="page-container flex items-center justify-center">
-      <div className="bg-secondary p-8 rounded-3xl border border-slate-700 shadow-2xl w-full max-w-md">
+      <div className="bg-secondary p-8 rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md">
         <header className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Admin Access</h1>
+          <h1 className="text-3xl font-bold text-text-main mb-2">Admin Access</h1>
           <p className="text-text_muted">Enter your credentials to manage content</p>
         </header>
 
@@ -45,7 +45,7 @@ export default function AdminLogin() {
             <label className="block text-sm font-medium text-text_muted mb-2">Username</label>
             <input
               type="text"
-              className="w-full bg-primary border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-4 py-3 text-text-main focus:outline-none focus:border-accent transition-colors"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -55,7 +55,7 @@ export default function AdminLogin() {
             <label className="block text-sm font-medium text-text_muted mb-2">Password</label>
             <input
               type="password"
-              className="w-full bg-primary border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-primary border border-slate-200 rounded-lg px-4 py-3 text-text-main focus:outline-none focus:border-accent transition-colors"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

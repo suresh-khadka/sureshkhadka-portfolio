@@ -1,36 +1,95 @@
-import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAnalytics } from '../hooks/useAnalytics';
 
 const Layout = () => {
   useAnalytics();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState('hero');
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -20% 0px',
+      threshold: 0.1,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleScroll = (id: string) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const navLinks = [
+    { id: 'about', label: 'About' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'blogs', label: 'Blog', external: '/blogs' },
+    { id: 'skills', label: 'Skills' },
+    { id: 'learning', label: 'Journey', external: '/learning' },
+    { id: 'contact', label: 'Contact' },
+  ];
 
   return (
-    <div className="app-layout min-h-screen bg-primary text-text-main">
-      <nav className="flex items-center justify-between px-6 py-4 bg-primary/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
-        <div className="text-xl font-bold text-white">
+    <div className="flex flex-col h-screen bg-primary text-text-main overflow-hidden">
+      <nav className="flex items-center justify-between px-6 py-4 bg-primary/80 backdrop-blur-md z-50 border-b border-slate-200 shrink-0">
+        <div className="text-xl font-bold text-text-main">
           <Link to="/" className="hover:text-accent transition-colors">Suresh Khadka</Link>
         </div>
         <ul className="hidden md:flex items-center gap-6">
-          <li><Link to="/about" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">About</Link></li>
-          <li><Link to="/projects" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Projects</Link></li>
-          <li><Link to="/blogs" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Blog</Link></li>
-          <li><Link to="/skills" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Skills</Link></li>
-          <li><Link to="/learning" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Journey</Link></li>
-          <li><Link to="/contact" className="text-sm font-medium text-text_muted hover:text-accent transition-colors">Contact</Link></li>
+          {navLinks.map(link => (
+            <li key={link.id}>
+              {link.external ? (
+                <Link 
+                  to={link.external as string} 
+                  className={`text-sm font-medium transition-colors ${activeSection === link.id ? 'text-accent' : 'text-text_muted hover:text-accent'}`}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <button 
+                  onClick={() => handleScroll(link.id)}
+                  className={`text-sm font-medium transition-colors ${activeSection === link.id ? 'text-accent' : 'text-text_muted hover:text-accent'}`}
+                >
+                  {link.label}
+                </button>
+              )}
+            </li>
+          ))}
           <li>
-            <Link to="/admin/login" className="bg-accent text-primary px-3 py-1 rounded-lg text-sm font-bold hover:bg-sky-300 transition-colors">
+            <Link to="/admin/login" className="bg-accent text-white px-3 py-1 rounded-lg text-sm font-bold hover:bg-sky-600 transition-colors">
               Admin
             </Link>
           </li>
         </ul>
       </nav>
 
-      <main className="main-content">
+      <main className="flex-1 overflow-hidden relative">
         <Outlet />
       </main>
 
-      <footer className="py-8 border-t border-slate-800 text-center text-text_muted text-sm">
+      <footer className="py-4 border-t border-slate-200 text-center text-text_muted text-xs shrink-0">
         <p>&copy; {new Date().getFullYear()} Suresh Khadka. Built with React & Django.</p>
       </footer>
     </div>
