@@ -45,7 +45,7 @@ def compress_image(image_bytes, max_size_kb=300, max_dim=1600):
     """
     Compresses and resizes image bytes.
     - Caps maximum dimension to max_dim (preserving aspect ratio).
-    - Converts to RGB (stripping metadata).
+    - Composites transparency onto a white background.
     - Saves as WebP with quality 80.
     - Iteratively reduces quality if the resulting size still exceeds max_size_kb.
     Returns processed bytes.
@@ -64,9 +64,12 @@ def compress_image(image_bytes, max_size_kb=300, max_dim=1600):
                 new_width = int(width * (max_dim / height))
             img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-        # 2. Convert to RGB (strips EXIF/metadata and handles transparency)
+        # 2. Composite transparency onto white background
         if img.mode in ("RGBA", "P"):
-            img = img.convert("RGB")
+            img = img.convert("RGBA")
+            background = Image.new("RGB", img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[-1])
+            img = background
         elif img.mode != "RGB":
             img = img.convert("RGB")
 
@@ -112,6 +115,7 @@ def upload_file_to_supabase(file, folder='portfolio-assets', custom_path=None):
     # Compress images if they are too large
     if file.content_type and 'image' in file.content_type:
         file_data = compress_image(file_data)
+        content_type = 'image/webp'
 
     supabase.storage.from_(folder).upload(
         path=file_path,
