@@ -32,11 +32,13 @@ export const NotebookSection: React.FC<NotebookSectionProps> = ({ title, cells, 
             return <MarkdownCell key={cell.id} content={cell.content} isAdmin={isAdmin} />;
           } else {
             const initialOutput = cell.output?.text_output || cell.output?.error_output || '';
+            const initialImage = cell.output?.image_output || '';
             return (
               <CodeCell
                 key={cell.id}
                 code={cell.content}
                 initialOutput={initialOutput}
+                initialImage={initialImage}
                 language={cell.language}
                 isAdmin={isAdmin}
               />

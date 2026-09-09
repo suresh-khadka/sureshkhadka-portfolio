@@ -6,13 +6,15 @@ import { usePyodide } from '../../hooks/usePyodide';
 interface CodeCellProps {
   code: string;
   initialOutput?: string;
+  initialImage?: string;
   language?: string;
   isAdmin?: boolean;
 }
 
-export const CodeCell: React.FC<CodeCellProps> = ({ code, initialOutput, language = 'python', isAdmin }) => {
+export const CodeCell: React.FC<CodeCellProps> = ({ code, initialOutput, initialImage, language = 'python', isAdmin }) => {
   const { runCode, isLoading, error } = usePyodide();
   const [output, setOutput] = useState(initialOutput || '');
+  const [imageOutput, setImageOutput] = useState(initialImage || '');
   const [isExecuting, setIsExecuting] = useState(false);
 
   const handleRun = async () => {
@@ -21,6 +23,7 @@ export const CodeCell: React.FC<CodeCellProps> = ({ code, initialOutput, languag
       const result = await runCode(code);
       const fullOutput = [result.stdout, result.stderr, result.result].filter(Boolean).join('\\n');
       setOutput(fullOutput);
+      setImageOutput(''); // Clear image on new run unless Pyodide is updated to return images
     } catch (err) {
       setOutput(`Error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
@@ -54,6 +57,16 @@ export const CodeCell: React.FC<CodeCellProps> = ({ code, initialOutput, languag
       {output && (
         <div className="p-3 rounded-lg bg-black text-green-400 font-mono text-sm whitespace-pre-wrap border border-slate-700">
           {output}
+        </div>
+      )}
+
+      {imageOutput && (
+        <div className="mt-3 rounded-lg overflow-hidden border border-slate-200 bg-white shadow-sm">
+          <img
+            src={imageOutput}
+            alt="Code output"
+            className="w-full h-auto block"
+          />
         </div>
       )}
 

@@ -112,6 +112,7 @@ class BlogCellOutput(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cell = models.OneToOneField(BlogCell, on_delete=models.CASCADE, related_name='output')
     text_output = models.TextField(blank=True, null=True)
+    html_output = models.TextField(blank=True, null=True)
     error_output = models.TextField(blank=True, null=True)
     image_output = models.TextField(blank=True, null=True)
 

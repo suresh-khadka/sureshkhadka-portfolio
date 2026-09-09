@@ -89,6 +89,92 @@ def compress_image(image_bytes, max_size_kb=300, max_dim=1600):
         print(f"Compression error: {e}")
         return image_bytes
 
+def parse_notebook_and_save_cells(notebook, notebook_json, supabase):
+    """
+    Parses notebook JSON and populates BlogCell and BlogCellOutput.
+    """
+    from content.models import BlogCell, BlogCellOutput
+
+    section = notebook.section
+    BlogCell.objects.filter(section=section).delete()
+
+    for idx, cell in enumerate(notebook_json.get('cells', [])):
+        cell_type = cell.get('cell_type', 'markdown')
+        source = cell.get('source', [])
+        if isinstance(source, list):
+            source = "".join(source)
+
+        blog_cell = BlogCell.objects.create(
+            section=section,
+            cell_type=cell_type,
+            content=source,
+            language=cell.get('metadata', {}).get('language', 'python') if cell_type == 'code' else 'markdown',
+            order=idx
+        )
+
+        outputs = cell.get('outputs', [])
+        for output in outputs:
+            out_type = output.get('output_type')
+            data_dict = output.get('data', {})
+
+            text_out = None
+            html_out = None
+            error_out = None
+            image_out = None
+
+            if out_type == 'stream':
+                text_out = "".join(output.get('text', []))
+            elif out_type == 'error':
+                error_out = output.get('ename', '') + ": " + output.get('evalue', '')
+            elif out_type in ('display_data', 'execute_result'):
+                image_mime = None
+                for mime in ['image/png', 'image/jpeg', 'image/svg+xml']:
+                    if mime in data_dict:
+                        image_mime = mime
+                        break
+
+                if image_mime:
+                    base64_data = data_dict[image_mime]
+                    try:
+                        if ',' in base64_data:
+                            base64_data = base64_data.split(',')[1]
+                        img_bytes = base64.b64decode(base64_data)
+
+                        class SupabaseFile:
+                            def __init__(self, content, name, content_type):
+                                self.content = content
+                                self.name = name
+                                self.content_type = content_type
+                            def read(self): return self.content
+                            def seek(self, offset, whence=0): pass
+                            def tell(self): return 0
+
+                        file_obj = SupabaseFile(
+                            img_bytes,
+                            f"output_{uuid.uuid4()}.png",
+                            'image/png' if 'png' in image_mime else 'image/jpeg'
+                        )
+                        blog_id = section.blog.id
+                        custom_path = f"blogs/{blog_id}/notebooks/{notebook.id}/outputs/{uuid.uuid4()}.png"
+                        public_url, _ = upload_file_to_supabase(file_obj, custom_path=custom_path)
+                        image_out = public_url
+                    except Exception:
+                        pass
+
+                if 'text/plain' in data_dict:
+                    text_out = "\n".join(data_dict['text/plain']) if isinstance(data_dict['text/plain'], list) else data_dict['text/plain']
+                if 'text/html' in data_dict:
+                    html_out = "".join(data_dict['text/html']) if isinstance(data_dict['text/html'], list) else data_dict['text/html']
+
+            if text_out or html_out or error_out or image_out:
+                BlogCellOutput.objects.create(
+                    cell=blog_cell,
+                    text_output=text_out,
+                    html_output=html_out,
+                    error_output=error_out,
+                    image_output=image_out
+                )
+
 def upload_file_to_supabase(file, folder='portfolio-assets', custom_path=None):
     """
     Uploads a file to Supabase Storage and returns the public URL.

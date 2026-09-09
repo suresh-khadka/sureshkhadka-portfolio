@@ -1,6 +1,7 @@
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import DOMPurify from 'dompurify';
 
 interface StaticCodeCellProps {
   code: string;
@@ -25,30 +26,31 @@ export const StaticCodeCell: React.FC<StaticCodeCellProps> = ({ code, outputs, l
         </SyntaxHighlighter>
       </div>
 
-      {outputs.map((output, idx) => {
-        if (output.text) {
-          return (
-            <div key={idx} className="p-3 rounded-lg bg-black text-green-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
+      {outputs.map((output, idx) => (
+        <React.Fragment key={idx}>
+          {output.text && (
+            <div className="p-3 rounded-lg bg-black text-green-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
               {output.text}
             </div>
-          );
-        }
-        if (output.error) {
-          return (
-            <div key={idx} className="p-3 rounded-lg bg-black text-red-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
+          )}
+          {output.html && (
+            <div
+              className="p-3 rounded-lg bg-white text-text-main font-sans text-sm overflow-auto border border-slate-300 mb-3"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(output.html) }}
+            />
+          )}
+          {output.error && (
+            <div className="p-3 rounded-lg bg-black text-red-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
               {output.error}
             </div>
-          );
-        }
-        if (output.image) {
-          return (
-            <div key={idx} className="mb-3 flex justify-center rounded-lg overflow-hidden border border-slate-300 bg-white">
+          )}
+          {output.image && (
+            <div className="mb-3 flex justify-center rounded-lg overflow-hidden border border-slate-300 bg-white">
               <img src={output.image} alt="Plot output" className="max-w-full h-auto" />
             </div>
-          );
-        }
-        return null;
-      })}
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
 };
