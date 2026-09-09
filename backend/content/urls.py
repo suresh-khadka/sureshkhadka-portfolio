@@ -8,7 +8,8 @@ from .views import (
     BlogSectionReorderView, BlogCellReorderView,
     BlogSyncView,
     TagListCreateView, TagDetailView,
-    LinkListCreateView, LinkDetailView
+    LinkListCreateView, LinkDetailView,
+    NotebookListCreateView, NotebookDetailView, NotebookReorderView
 )
 from .upload_views import FileUploadView
 
@@ -24,6 +25,9 @@ urlpatterns = [
     path('blogs/<slug:slug>/sections/reorder/', BlogSectionReorderView.as_view(), name='blog-sections-reorder'),
     path('blog-sections/', BlogSectionListCreateView.as_view(), name='blog-section-list'),
     path('blog-sections/<uuid:pk>/', BlogSectionDetailView.as_view(), name='blog-section-detail'),
+    path('blog-sections/<uuid:section_id>/notebooks/', NotebookListCreateView.as_view(), name='notebook-list'),
+    path('blog-sections/<uuid:section_id>/notebooks/<uuid:pk>/', NotebookDetailView.as_view(), name='notebook-detail'),
+    path('blog-sections/<uuid:section_id>/notebooks/reorder/', NotebookReorderView.as_view(), name='notebook-reorder'),
     path('blog-sections/<uuid:pk>/cells/reorder/', BlogCellReorderView.as_view(), name='blog-cells-reorder'),
     path('blog-cells/', BlogCellListCreateView.as_view(), name='blog-cell-list'),
     path('blog-cells/<uuid:pk>/', BlogCellDetailView.as_view(), name='blog-cell-detail'),

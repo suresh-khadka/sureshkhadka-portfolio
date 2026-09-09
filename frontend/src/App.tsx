@@ -9,29 +9,26 @@ import LearningJourney from './pages/LearningJourney';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-import { PyodideProvider } from './context/PyodideContext';
 
 function App() {
   return (
-    <PyodideProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="projects/:slug" element={<ProjectDetail />} />
-            <Route path="blogs" element={<BlogList />} />
-            <Route path="blogs/:slug" element={<BlogDetail />} />
-            <Route path="learning" element={<LearningJourney />} />
-            <Route path="admin/login" element={<AdminLogin />} />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="projects/:slug" element={<ProjectDetail />} />
+          <Route path="blogs" element={<BlogList />} />
+          <Route path="blogs/:slug" element={<BlogDetail />} />
+          <Route path="learning" element={<LearningJourney />} />
+          <Route path="admin/login" element={<AdminLogin />} />
 
-            <Route element={<ProtectedRoute />}>
-              <Route path="admin/dashboard" element={<AdminDashboard />} />
-            </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="admin/dashboard" element={<AdminDashboard />} />
           </Route>
-        </Routes>
-      </Router>
-    </PyodideProvider>
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

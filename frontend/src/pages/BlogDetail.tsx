@@ -1,7 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import apiClient from '../api/client';
-import { NotebookSection } from '../components/notebook/NotebookSection';
+import { NotebookContainer } from '../components/notebook/NotebookContainer';
+import { MarkdownCell } from '../components/notebook/MarkdownCell';
+import { StaticCodeCell } from '../components/notebook/StaticCodeCell';
+
+interface BlogCell {
+  id: string;
+  cell_type: 'markdown' | 'code';
+  content: string;
+  language?: string;
+  order: number;
+  output?: {
+    text_output?: string;
+    error_output?: string;
+    image_output?: string;
+  };
+}
 
 interface Blog {
   id: string;
@@ -13,19 +28,15 @@ interface Blog {
   sections: {
     id: string;
     title: string;
+    slug: string;
     order: number;
-    cells: {
+    notebooks: {
       id: string;
-      cell_type: 'markdown' | 'code';
-      content: string;
-      language: string;
+      title: string;
+      storage_path: string;
       order: number;
-      output?: {
-        text_output: string | null;
-        error_output: string | null;
-        image_output: string | null;
-      };
     }[];
+    cells: BlogCell[];
   }[];
 }
 
@@ -107,7 +118,7 @@ export default function BlogDetail() {
           </div>
         </div>
         <img
-          src={blog.cover_image_url || 'https://via.placeholder.com/1200x600'}
+          src={blog.cover_image_url || 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%221200%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%2214%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ENo%20Image%20Available%3C%2Ftext%3E%3C%2Fsvg%3E'}
           alt={blog.title}
           className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-2xl border border-slate-200 mb-8"
         />
@@ -127,7 +138,7 @@ export default function BlogDetail() {
               {blog.sections.map(section => (
                 <a
                   key={section.id}
-                  href={`#${section.id}`}
+                  href={`#${section.slug || section.id}`}
                   className="block text-sm text-text_muted hover:text-accent transition-colors"
                 >
                   {section.title}
@@ -141,11 +152,50 @@ export default function BlogDetail() {
         <main className="lg:col-span-3">
           {blog.sections && blog.sections.length > 0 ? (
             blog.sections.map(section => (
-              <div id={section.id} key={section.id}>
-                <NotebookSection
-                  title={section.title}
-                  cells={section.cells || []}
-                />
+              <div id={section.slug || section.id} key={section.id} className="mb-16">
+                <h2 className="text-3xl font-bold text-text-main mb-8 pb-2 border-b-2 border-slate-100">
+                  {section.title}
+                </h2>
+                <div className="space-y-8">
+                  {section.cells && section.cells.length > 0 && (
+                    <div className="space-y-4">
+                      {section.cells.map((cell, idx) => {
+                        if (cell.cell_type === 'markdown') {
+                          return <MarkdownCell key={cell.id || idx} content={cell.content} />;
+                        }
+                        if (cell.cell_type === 'code') {
+                          return (
+                            <StaticCodeCell
+                              key={cell.id || idx}
+                              code={cell.content}
+                              language={cell.language}
+                              outputs={cell.output ? [{
+                                text: cell.output.text_output,
+                                error: cell.output.error_output,
+                                image: cell.output.image_output,
+                              }] : []}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  )}
+
+                  {section.notebooks && section.notebooks.length > 0 && (
+                    <div className="space-y-4">
+                      {section.notebooks.map(notebook => (
+                        <NotebookContainer key={notebook.id} notebook={notebook} />
+                      ))}
+                    </div>
+                  )}
+
+                  {!section.cells?.length && !section.notebooks?.length && (
+                    <div className="p-8 text-center text-text_muted bg-secondary rounded-2xl border border-dashed border-slate-300">
+                      No content available for this section.
+                    </div>
+                  )}
+                </div>
               </div>
             ))
           ) : (

@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../../api/client';
 import { Button } from '../Button';
-import { NotebookEditor } from './NotebookEditor';
+import { NotebookManager } from './NotebookManager';
+
+interface Notebook {
+  id: string;
+  title: string;
+  storage_path: string;
+  order: number;
+}
+
+interface Section {
+  id: string;
+  title: string;
+  slug: string;
+  order: number;
+  notebooks: Notebook[];
+  isNew?: boolean;
+}
 
 interface Blog {
   id: string;
@@ -11,18 +27,7 @@ interface Blog {
   cover_image_url: string;
   is_draft: boolean;
   tags: { id: string; name: string; slug: string }[];
-  sections: {
-    id: string;
-    title: string;
-    order: number;
-    cells: {
-      id: string;
-      cell_type: 'markdown' | 'code';
-      content: string;
-      language: string;
-      order: number;
-    }[];
-  }[];
+  sections: Section[];
 }
 
 interface Tag {
@@ -44,7 +49,7 @@ export const BlogManager = () => {
     is_draft: false,
     selectedTags: [] as string[],
   });
-  const [notebookSections, setNotebookSections] = useState<Blog['sections']>([]);
+  const [notebookSections, setNotebookSections] = useState<Section[]>([]);
   const [uploading, setUploading] = useState(false);
   const [isSavingBlog, setIsSavingBlog] = useState(false);
 
@@ -74,7 +79,8 @@ export const BlogManager = () => {
     formData.append('file', file);
 
     try {
-      const response = await apiClient.post('/upload/', formData, {
+      const uploadUrl = `/upload/?blog_id=${editingBlog?.id || ''}&type=cover`;
+      const response = await apiClient.post(uploadUrl, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setFormData(prev => ({ ...prev, cover_image_url: response.data.url }));
@@ -85,7 +91,7 @@ export const BlogManager = () => {
     }
   };
 
-  const handleUpdateSections = (sections: Blog['sections']) => {
+  const handleUpdateSections = (sections: Section[]) => {
     setNotebookSections(sections);
   };
 
@@ -115,18 +121,9 @@ export const BlogManager = () => {
         currentBlogId = savedBlog.id;
       }
 
-      // After saving the main blog metadata, sync the notebook structure if present
-      if (currentBlogId && notebookSections.length > 0) {
-        await apiClient.post(`/blogs/${currentBlogId}/sync/`, {
-          sections: notebookSections,
-        });
-      }
-
-      // Transition into "Editing" mode for the saved blog
       setEditingBlog(savedBlog);
       setIsCreating(false);
 
-      // Keep form data synced with the saved object
       setFormData({
         title: savedBlog.title,
         slug: savedBlog.slug,
@@ -136,29 +133,26 @@ export const BlogManager = () => {
         selectedTags: savedBlog.tags ? savedBlog.tags.map((t: any) => t.id) : [],
       });
 
+      // SYNC SECTIONS
+      if (savedBlog.id && notebookSections.length > 0) {
+        await apiClient.post(`/blogs/${savedBlog.id}/sync/`, {
+          sections: notebookSections.map(s => ({
+            id: s.id,
+            title: s.title,
+            order: s.order,
+          }))
+        });
+
+        // Mark all sections as persisted
+        setNotebookSections(prev => prev.map(s => ({ ...s, isNew: false })));
+      }
+
       fetchContent();
-      alert('Blog saved successfully! You can now add sections to your notebook.');
+      alert('Blog saved successfully!');
     } catch (error) {
       alert('Save failed');
     } finally {
       setIsSavingBlog(false);
-    }
-  };
-
-  const handleSaveNotebookOnly = async (sections: Blog['sections']) => {
-    if (!editingBlog) {
-      alert('Please save the basic blog info first to create the blog in the database.');
-      return;
-    }
-
-    try {
-      await apiClient.post(`/blogs/${editingBlog.id}/sync/`, {
-        sections: sections,
-      });
-      setNotebookSections(sections);
-      alert('Notebook structure synchronized!');
-    } catch (error) {
-      alert('Failed to sync notebook');
     }
   };
 
@@ -278,16 +272,89 @@ export const BlogManager = () => {
               </div>
             </form>
           </div>
+          <div className="lg:col-span-3 space-y-8">
+            {/* CONTENT SECTION LIST */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-text-main">Blog Structure</h3>
+                <Button
+                  variant="primary"
+                  className="text-sm"
+                  onClick={() => {
+                    const newSection: Section = {
+                      id: crypto.randomUUID(),
+                      title: 'New Section',
+                      slug: `section-${Date.now()}`,
+                      order: notebookSections.length,
+                      notebooks: [],
+                      isNew: true
+                    };
+                    setNotebookSections([...notebookSections, newSection]);
+                  }}
+                >
+                  + Add Content Section
+                </Button>
+              </div>
 
-          <div className="lg:col-span-3 space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <NotebookEditor
-                blogId={editingBlog?.id || ''}
-                sections={notebookSections}
-                onUpdateSections={handleUpdateSections}
-                onSave={handleSaveNotebookOnly}
-              />
+              <div className="space-y-3">
+                {notebookSections.map((section, idx) => (
+                  <div key={section.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 group">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-slate-400">{idx + 1}.</span>
+                      <input
+                        className="bg-transparent border-b border-transparent focus:border-primary outline-none font-medium text-text-main"
+                        value={section.title}
+                        onChange={(e) => {
+                          const updated = [...notebookSections];
+                          updated[idx].title = e.target.value;
+                          setNotebookSections(updated);
+                        }}
+                      />
+                    </div>
+                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="secondary"
+                        className="px-2 py-1 text-xs"
+                        onClick={() => {
+                          const updated = notebookSections.filter(s => s.id !== section.id);
+                          setNotebookSections(updated);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                {notebookSections.length === 0 && (
+                  <div className="text-center py-8 text-text_muted italic text-sm">
+                    No sections added yet. Start by adding a content section.
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* SECTIONS DETAIL / NOTEBOOKS */}
+            {notebookSections.length > 0 && (
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-text-main">Notebooks</h3>
+                <div className="grid grid-cols-1 gap-6">
+                  {notebookSections.map(section => (
+                    <div key={section.id} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <h4 className="font-bold text-text-main text-lg">{section.title}</h4>
+                      </div>
+                      <NotebookManager
+                        blogId={editingBlog?.id || ''}
+                        sections={[section]}
+                        onUpdateSections={(updated) => {
+                          setNotebookSections(notebookSections.map(s => s.id === section.id ? updated[0] : s));
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -306,7 +373,7 @@ export const BlogManager = () => {
           {blogs.map(b => (
             <div key={b.id} className="bg-secondary p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
               <div className="flex items-center gap-4 mb-4">
-                <img src={b.cover_image_url || 'https://via.placeholder.com/50'} className="w-12 h-12 rounded-lg object-cover" />
+                <img src={b.cover_image_url || 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%228%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3Eno%20img%3C%2Ftext%3E%3C%2Fsvg%3E'} className="w-12 h-12 rounded-lg object-cover" />
                 <div className="overflow-hidden">
                   <div className="text-text-main font-bold truncate">{b.title} {b.is_draft && <span className="text-xs text-orange-400 font-normal ml-2">(Draft)</span>}</div>
                   <div className="text-xs text-text_muted truncate">{b.slug}</div>

@@ -65,13 +65,30 @@ class BlogSection(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='sections')
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
     order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+        unique_together = ('blog', 'slug')
+
+    def __str__(self):
+        return f"{self.blog.title} - {self.title}"
+
+class Notebook(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    section = models.ForeignKey(BlogSection, on_delete=models.CASCADE, related_name='notebooks')
+    title = models.CharField(max_length=255)
+    storage_path = models.TextField()
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
-        return f"{self.blog.title} - {self.title}"
+        return f"{self.section.title} - {self.title}"
 
 class BlogCell(models.Model):
     CELL_TYPES = (

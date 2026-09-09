@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SkillCategory, Skill, Project, Tag, Blog, BlogSection, BlogCell, BlogCellOutput, Link
+from .models import SkillCategory, Skill, Project, Tag, Blog, BlogSection, BlogCell, BlogCellOutput, Notebook, Link
 
 class SkillCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,6 +28,18 @@ class BlogCellOutputSerializer(serializers.ModelSerializer):
         model = BlogCellOutput
         fields = ['text_output', 'error_output', 'image_output']
 
+class NotebookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notebook
+        fields = ['id', 'section', 'title', 'storage_path', 'order', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'section', 'storage_path', 'order', 'created_at', 'updated_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make title optional during validation so perform_create can derive it
+        if 'title' in self.fields:
+            self.fields['title'].required = False
+
 class BlogCellSerializer(serializers.ModelSerializer):
     output = BlogCellOutputSerializer(read_only=True)
 
@@ -37,10 +49,11 @@ class BlogCellSerializer(serializers.ModelSerializer):
 
 class BlogSectionSerializer(serializers.ModelSerializer):
     cells = BlogCellSerializer(many=True, read_only=True)
+    notebooks = NotebookSerializer(many=True, read_only=True)
 
     class Meta:
         model = BlogSection
-        fields = ['id', 'title', 'order', 'cells']
+        fields = ['id', 'title', 'slug', 'order', 'cells', 'notebooks']
 
 class BlogSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
