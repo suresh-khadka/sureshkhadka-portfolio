@@ -8,8 +8,9 @@ export default function About() {
         <div>
           <h1 className="text-5xl font-bold text-text-main mb-6">About Me</h1>
           <p className="text-lg text-text_muted mb-6">
-            I am a passionate AI/ML Engineer and Full-stack Developer with a deep interest in 
-            building systems that can learn, adapt, and solve complex real-world problems.
+            I’m Suresh Khadka, a Computer Engineering student with a growing focus on 
+            Artificial Intelligence, Machine Learning, and Data Science. I enjoy understanding 
+            how intelligent systems work and turning what I learn into practical projects.
           </p>
           <p className="text-lg text-text_muted mb-8">
             Currently, I am focusing on the intersection of Large Language Models (LLMs) and 

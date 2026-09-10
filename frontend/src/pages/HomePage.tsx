@@ -24,6 +24,16 @@ interface Skill {
   proficiency: number;
 }
 
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  cover_image_url: string;
+  published_at: string;
+  tags: { id: string; name: string; slug: string }[];
+}
+
 interface HeroProps {
   name: string;
   role: string;
@@ -37,7 +47,46 @@ interface HeroProps {
   };
 }
 
+const milestones = [
+  {
+    year: '2024',
+    title: 'The Beginning',
+    description: 'Started my journey into programming and Computer Engineering, building a foundation in Python, programming fundamentals, and problem solving.'
+  },
+  {
+    year: '2025',
+    title: 'Machine Learning Journey',
+    description: 'Moved deeper into Machine Learning and Data Science. Learned NumPy, Pandas, Matplotlib, Scikit-learn, data preprocessing, EDA, feature engineering, dimensionality reduction, and model evaluation. Built practical projects involving regression, classification, recommendation systems, and predictive modeling.'
+  },
+  {
+    year: '2025',
+    title: 'From Data to Intelligent Systems',
+    description: 'Started working with larger datasets and more advanced ML techniques, including PCA, scaling, encoding, hyperparameter tuning, GridSearchCV, Optuna, XGBoost, and LightGBM. Built projects such as a House Price Prediction system and a Mobile Recommendation System, learning how to move from a trained model to a real application.'
+  },
+  {
+    year: '2025–2026',
+    title: 'Full-Stack Development',
+    description: 'Expanded beyond ML into web development, learning HTML, CSS, JavaScript, jQuery, AJAX, Fetch API, React, Django, and databases. Started building complete applications where the frontend, backend, database, and ML models work together.'
+  },
+  {
+    year: '2026',
+    title: 'Deep Learning',
+    description: 'Started my deeper exploration of Deep Learning and Neural Networks. Learning concepts such as ANNs, CNNs, forward propagation, backpropagation, activation functions, loss functions, optimization, and model training, while implementing the concepts through practical experiments.'
+  },
+  {
+    year: '2026',
+    title: 'AI Engineering',
+    description: 'Currently combining everything I\'ve learned — Machine Learning, Deep Learning, Web Development, APIs, Databases, and AI systems — to build more complete and practical AI applications. My focus is shifting from simply training models to understanding how to design, deploy, and build useful AI-powered products.'
+  },
+  {
+    year: 'Next',
+    title: 'Building Real-World AI Systems',
+    description: 'The goal is to continue toward AI Engineering, exploring LLMs, RAG, AI agents, multimodal AI, recommendation systems, and intelligent applications while documenting everything I learn through projects and technical blogs.'
+  },
+];
+
 const Hero = ({ name, role, photoUrl, socialLinks }: HeroProps) => {
+
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const containerVariants: Variants = {
@@ -71,9 +120,13 @@ const Hero = ({ name, role, photoUrl, socialLinks }: HeroProps) => {
   return (
     <section id="hero" className="relative w-full min-h-screen overflow-hidden bg-primary">
       {/* Photo layer - full background on desktop, hidden on mobile */}
-      <div className="hidden md:block absolute inset-0 bg-primary">
-        <img src={photoUrl} alt={name} className="w-full h-full object-cover object-center" />
-      </div>
+      <img
+        src={photoUrl}
+        alt={name}
+        className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
+        style={{ willChange: 'transform' }}
+      />
+
 
       <div className="relative z-10 flex flex-col md:block min-h-screen">
         {/* Text panel */}
@@ -226,21 +279,36 @@ const SkillCard = ({ skill }: { skill: Skill }) => {
   );
 };
 
+const CategoryCard = ({ category, skills }: { category: string, skills: Skill[] }) => (
+  <div className="bg-secondary p-8 rounded-3xl border border-slate-200 shadow-lg">
+    <h3 className="text-2xl font-bold text-text-main mb-6 text-center border-b border-slate-200 pb-4">{category}</h3>
+    <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+      {skills.filter(s => s.category_name === category).map(skill => (
+        <SkillCard key={skill.id} skill={skill} />
+      ))}
+    </div>
+  </div>
+);
+
+
 export default function HomePage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [contactStatus, setContactStatus] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [projectsRes, skillsRes] = await Promise.all([
+        const [projectsRes, skillsRes, blogsRes] = await Promise.all([
           apiClient.get('/projects/'),
           apiClient.get('/skills/'),
+          apiClient.get('/blogs/'),
         ]);
         setProjects(projectsRes.data);
         setSkills(skillsRes.data);
+        setBlogs(blogsRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -277,13 +345,13 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
             <p className="text-lg text-text_muted leading-relaxed">
-              I am a passionate AI/ML Engineer and Full-stack Developer with a deep interest in
-              building systems that can learn, adapt, and solve complex real-world problems.
+              I’m Suresh Khadka, a Computer Engineering student passionate about AI, Machine Learning, and Data Science. I enjoy turning what I learn into practical projects and exploring how intelligent systems can solve real-world problems.
             </p>
             <p className="text-lg text-text_muted leading-relaxed">
-              Currently, I am focusing on the intersection of Large Language Models (LLMs) and
-              traditional software architecture, aiming to create tools that are not only
-              intelligent but also robust and scalable.
+              My journey has taken me from Python and data analysis into machine learning, deep learning, and full-stack AI applications. I’m a strong believer in learning by building, experimenting, and sharing, which is why I document my learning and projects through this portfolio.
+            </p>
+            <p className="text-lg text-text_muted leading-relaxed">
+              Currently, I’m focused on growing as an AI/ML and Data Science Engineer and building meaningful projects along the way.
             </p>
             <div className="flex gap-4">
               <Link to="/learning" className="bg-accent text-white px-6 py-3 rounded-lg font-bold hover:bg-sky-600 transition-colors">
@@ -313,19 +381,45 @@ export default function HomePage() {
             {[1, 2].map(i => <div key={i} className="bg-secondary h-64 rounded-3xl"></div>)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {skillCategories.map(category => (
-              <div key={category} className="bg-secondary p-8 rounded-3xl border border-slate-200 shadow-lg">
-                <h3 className="text-2xl font-bold text-text-main mb-12 text-center border-b border-slate-200 pb-4">{category}</h3>
-                <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-                  {skills.filter(s => s.category_name === category).map(skill => (
-                    <SkillCard key={skill.id} skill={skill} />
-                  ))}
+          <>
+            <div className="block md:hidden flex flex-col gap-12">
+              {skillCategories.map(category => (
+                <CategoryCard key={category} category={category} skills={skills} />
+              ))}
+            </div>
+            <div className="hidden md:flex gap-12 items-start">
+              <div className="flex-1 flex flex-col gap-12">
+                {skillCategories.filter((_, i) => i % 2 === 0).map(category => (
+                  <CategoryCard key={category} category={category} skills={skills} />
+                ))}
+              </div>
+              <div className="flex-1 flex flex-col gap-12">
+                {skillCategories.filter((_, i) => i % 2 !== 0).map(category => (
+                  <CategoryCard key={category} category={category} skills={skills} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </SectionWrapper>
+
+      <SectionWrapper id="learning" title="Learning Journey" subtitle="The path from a curious student to an AI/ML engineer.">
+        <div className="relative max-w-4xl mx-auto">
+          <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 h-full w-1 bg-slate-200"></div>
+          <div className="space-y-12">
+            {milestones.map((m, i) => (
+              <div key={i} className={`relative flex items-center justify-between ${i % 2 === 0 ? 'flex-row-reverse' : ''}`}>
+                <div className="hidden md:block w-5/12"></div>
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-accent rounded-full border-4 border-primary shadow-lg"></div>
+                <div className="w-full md:w-5/12 p-6 bg-secondary rounded-2xl border border-slate-200 shadow-lg">
+                  <span className="text-accent font-bold text-xl">{m.year}</span>
+                  <h3 className="text-text-main font-bold text-lg mb-2">{m.title}</h3>
+                  <p className="text-text_muted text-sm">{m.description}</p>
                 </div>
               </div>
             ))}
           </div>
-        )}
+        </div>
       </SectionWrapper>
 
       <SectionWrapper id="projects" title="Featured Work" subtitle="A selection of my most impactful AI/ML projects">
@@ -365,6 +459,50 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      </SectionWrapper>
+
+      <SectionWrapper id="blogs" title="Recent Blogs" subtitle="Sharing my thoughts on Machine Learning, AI architecture, and software engineering.">
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
+            {[1, 2].map(i => <div key={i} className="bg-secondary h-64 rounded-3xl"></div>)}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {blogs.slice(0, 6).map(blog => (
+              <div key={blog.id} className="group bg-secondary rounded-2xl overflow-hidden border border-slate-200 hover:border-accent transition-all duration-300 shadow-lg">
+                <div className="h-48 overflow-hidden">
+                  <img
+                    src={blog.cover_image_url || 'https://placehold.co/400x200'}
+                    alt={blog.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex gap-2 mb-3">
+                    {blog.tags.map(tag => (
+                      <span key={tag.id} className="text-xs text-accent">#{tag.name}</span>
+                    ))}
+                  </div>
+                  <h3 className="text-xl font-bold text-text-main mb-2 group-hover:text-accent transition-colors">{blog.title}</h3>
+                  <p className="text-text_muted text-sm mb-6 line-clamp-2">
+                    {blog.content ? blog.content.substring(0, 150) : 'No content available'}...
+                  </p>
+                  <Link
+                    to={`/blogs/${blog.slug}`}
+                    className="text-text-main font-semibold flex items-center gap-2 hover:text-accent transition-colors"
+                  >
+                    Read Article <span className="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="text-center mt-12">
+          <Link to="/blogs" className="bg-accent text-white px-8 py-3 rounded-lg font-bold hover:bg-sky-600 transition-colors">
+            View All Blogs
+          </Link>
+        </div>
       </SectionWrapper>
 
       <SectionWrapper id="contact" title="Get in Touch" subtitle="Have a project in mind or just want to say hi?">

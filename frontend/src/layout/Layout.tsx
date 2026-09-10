@@ -44,10 +44,10 @@ const Layout = () => {
 
   const navLinks = [
     { id: 'about', label: 'About' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'blogs', label: 'Blog', external: '/blogs' },
     { id: 'skills', label: 'Skills' },
-    { id: 'learning', label: 'Journey', external: '/learning' },
+    { id: 'learning', label: 'Journey' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'blogs', label: 'Blog' },
     { id: 'contact', label: 'Contact' },
   ];
 
