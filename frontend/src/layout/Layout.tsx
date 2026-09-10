@@ -24,7 +24,7 @@ const Layout = () => {
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-    
+
     const sections = document.querySelectorAll('section[id]');
     sections.forEach((section) => observer.observe(section));
 
@@ -61,14 +61,14 @@ const Layout = () => {
           {navLinks.map(link => (
             <li key={link.id}>
               {link.external ? (
-                <Link 
-                  to={link.external as string} 
+                <Link
+                  to={link.external as string}
                   className={`text-sm font-medium transition-colors ${activeSection === link.id ? 'text-accent' : 'text-text_muted hover:text-accent'}`}
                 >
                   {link.label}
                 </Link>
               ) : (
-                <button 
+                <button
                   onClick={() => handleScroll(link.id)}
                   className={`text-sm font-medium transition-colors ${activeSection === link.id ? 'text-accent' : 'text-text_muted hover:text-accent'}`}
                 >

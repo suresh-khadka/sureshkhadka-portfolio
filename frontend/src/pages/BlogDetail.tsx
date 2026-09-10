@@ -103,7 +103,7 @@ export default function BlogDetail() {
   if (!blog) return <div className="page-container text-center py-20 text-text-main">Blog post not found.</div>;
 
   return (
-    <div className="page-container">
+    <div className="page-container max-w-none">
       <Link to="/blogs" className="text-accent hover:underline mb-8 inline-block">&larr; Back to Blog</Link>
 
       <header className="text-center mb-12">
@@ -129,10 +129,10 @@ export default function BlogDetail() {
         )}
       </header>
 
-      <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-12">
+      <div className="max-w-[2000px] ml-0 flex flex-col md:flex-row items-start gap-8">
         {/* Table of Contents */}
-        <aside className="lg:col-span-1">
-          <div className="sticky top-24 p-4 bg-secondary rounded-2xl border border-slate-200">
+        <aside className="md:w-64 shrink-0 sticky top-24 -translate-x-6">
+          <div className="p-4 bg-secondary rounded-2xl border border-slate-200">
             <h3 className="text-sm font-bold text-text-main uppercase mb-4 border-b border-slate-200 pb-2">Contents</h3>
             <nav className="space-y-2">
               {blog.sections.map(section => (
@@ -149,7 +149,7 @@ export default function BlogDetail() {
         </aside>
 
         {/* Notebook Content */}
-        <main className="lg:col-span-3">
+        <main className="flex-1 min-w-0">
           {blog.sections && blog.sections.length > 0 ? (
             blog.sections.map(section => (
               <div id={section.slug || section.id} key={section.id} className="mb-16">
