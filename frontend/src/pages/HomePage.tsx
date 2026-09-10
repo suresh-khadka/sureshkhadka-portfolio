@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
+import { Linkedin, Instagram, Mail, Maximize2, X } from 'lucide-react';
+import { FaGithub, FaTwitter } from 'react-icons/fa';
 import apiClient from '../api/client';
 import { Button } from '../components/Button';
 
@@ -22,11 +24,147 @@ interface Skill {
   proficiency: number;
 }
 
+interface HeroProps {
+  name: string;
+  role: string;
+  photoUrl: string;
+  socialLinks: {
+    github?: string;
+    linkedin?: string;
+    twitter?: string;
+    instagram?: string;
+    email?: string;
+  };
+}
+
+const Hero = ({ name, role, photoUrl, socialLinks }: HeroProps) => {
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    },
+  };
+
+  const socialIcons = [
+    { icon: FaGithub, link: socialLinks.github },
+    { icon: Linkedin, link: socialLinks.linkedin },
+    { icon: FaTwitter, link: socialLinks.twitter },
+    { icon: Instagram, link: socialLinks.instagram },
+    { icon: Mail, link: socialLinks.email },
+  ].filter(item => item.link);
+
+  return (
+    <section id="hero" className="relative w-full min-h-screen overflow-hidden bg-primary">
+      {/* Photo layer - full background on desktop, hidden on mobile */}
+      <div className="hidden md:block absolute inset-0 bg-primary">
+        <img src={photoUrl} alt={name} className="w-full h-full object-cover object-center" />
+      </div>
+
+      <div className="relative z-10 flex flex-col md:block min-h-screen">
+        {/* Text panel */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="relative z-10 w-full md:w-[58%] md:min-h-screen bg-primary flex flex-col justify-center px-8 md:px-16 lg:px-24 py-20 md:[clip-path:polygon(0_0,100%_0,78%_100%,0_100%)]"
+        >
+          <motion.span variants={itemVariants} className="text-gray-500 font-medium text-lg mb-2">
+            Hi, I am
+          </motion.span>
+
+          <motion.h1
+            variants={itemVariants}
+            className="text-5xl md:text-6xl font-bold text-gray-900 mb-4"
+          >
+            {name}
+          </motion.h1>
+
+          <motion.p variants={itemVariants} className="text-gray-500 font-medium tracking-wide text-xl mb-8">
+            {role}
+          </motion.p>
+
+          <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
+            {socialIcons.map(({ icon: Icon, link }, i) => (
+              <a
+                key={i}
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-black"
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* Photo - mobile only, stacked below text */}
+        <div className="md:hidden relative w-full h-80 bg-primary">
+          <img src={photoUrl} alt={name} className="w-full h-full object-cover object-center" />
+        </div>
+      </div>
+
+      <button
+        onClick={() => setIsLightboxOpen(true)}
+        className="absolute bottom-6 right-6 z-20 p-3 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-colors"
+        aria-label="Expand image"
+      >
+        <Maximize2 size={24} />
+      </button>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {isLightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            <button
+              onClick={() => setIsLightboxOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+              aria-label="Close lightbox"
+            >
+              <X size={32} />
+            </button>
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              src={photoUrl}
+              alt={name}
+              className="max-w-full max-h-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+};
+
 const SectionWrapper = ({ id, children, title, subtitle }: { id: string, children: React.ReactNode, title?: string, subtitle?: string }) => {
   return (
     <section
       id={id}
-      className="min-h-screen w-full flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24 snap-start"
+      className="min-h-screen w-full flex flex-col justify-center py-20 px-6 md:px-12 lg:px-24"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -54,16 +192,13 @@ const SkillCard = ({ skill }: { skill: Skill }) => {
       whileHover="hover"
       initial="initial"
     >
-      {/* Circular Background */}
       <div className="absolute inset-0 rounded-full bg-primary border-2 border-slate-200 group-hover:border-accent transition-colors duration-300 shadow-sm group-hover:shadow-md" />
-
-      {/* Icon / Percentage Content */}
       <div className="absolute inset-0 flex items-center justify-center p-2">
         <motion.div
           variants={{
             initial: { opacity: 1, scale: 1, rotate: 0 },
             hover: { opacity: 0, scale: 0.5, rotate: -90 }
-        }}
+          }}
           transition={{ duration: 0.3 }}
           className="flex items-center justify-center w-full h-full"
         >
@@ -73,20 +208,17 @@ const SkillCard = ({ skill }: { skill: Skill }) => {
             className="w-10 h-10 md:w-12 md:h-12 object-contain"
           />
         </motion.div>
-
         <motion.div
           variants={{
             initial: { opacity: 0, scale: 0.5, rotate: 90 },
             hover: { opacity: 1, scale: 1, rotate: 0 }
-        }}
+          }}
           transition={{ duration: 0.3 }}
           className="absolute inset-0 flex flex-col items-center justify-center text-center"
         >
           <span className="text-lg md:text-xl font-bold text-accent">{skill.proficiency}%</span>
         </motion.div>
       </div>
-
-      {/* Tooltip/Label */}
       <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-max text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <span className="text-xs font-bold text-text-main whitespace-nowrap">{skill.name}</span>
       </div>
@@ -127,37 +259,20 @@ export default function HomePage() {
   const skillCategories = Array.from(new Set(skills.map(s => s.category_name)));
 
   return (
-    <div className="snap-container h-full">
-      {/* Hero Section */}
-      <section id="hero" className="min-h-screen w-full flex flex-col items-center justify-center text-center py-20 px-6 snap-start">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="flex flex-col items-center"
-        >
-          <div className="mb-6 inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-sm font-medium">
-            Available for new opportunities
-          </div>
-          <h1 className="text-5xl md:text-8xl font-extrabold text-text-main mb-6 leading-tight">
-            Building the future with <span className="text-accent">AI & ML</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-text_muted max-w-3xl mx-auto mb-12 leading-relaxed">
-            Hi, I am Suresh Khadka. I specialize in creating intelligent systems that solve real-world problems.
-            Explore my work, my journey, and my technical expertise.
-          </p>
-          <div className="flex gap-4">
-            <Button variant="primary" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
-              View Work
-            </Button>
-            <Button variant="outline" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
-              Get in Touch
-            </Button>
-          </div>
-        </motion.div>
-      </section>
+    <div className="">
+      <Hero
+        name="Suresh Khadka"
+        role="Aspiring AI,  ML & Data Science Engineer"
+        photoUrl="/hero.jpeg"
+        socialLinks={{
+          github: "https://github.com/sureshkhadka",
+          linkedin: "https://linkedin.com/in/sureshkhadka",
+          twitter: "https://twitter.com/sureshkhadka",
+          instagram: "https://instagram.com/sureshkhadka",
+          email: "mailto:suresh@example.com"
+        }}
+      />
 
-      {/* About Section */}
       <SectionWrapper id="about" title="About Me">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-6">
@@ -192,7 +307,6 @@ export default function HomePage() {
         </div>
       </SectionWrapper>
 
-      {/* Skills Section */}
       <SectionWrapper id="skills" title="Technical Skills" subtitle="My toolbelt for building intelligent applications.">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-pulse">
@@ -214,7 +328,6 @@ export default function HomePage() {
         )}
       </SectionWrapper>
 
-      {/* Projects Section */}
       <SectionWrapper id="projects" title="Featured Work" subtitle="A selection of my most impactful AI/ML projects">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-pulse">
@@ -254,7 +367,6 @@ export default function HomePage() {
         )}
       </SectionWrapper>
 
-      {/* Contact Section */}
       <SectionWrapper id="contact" title="Get in Touch" subtitle="Have a project in mind or just want to say hi?">
         <div className="max-w-xl mx-auto bg-secondary p-8 rounded-3xl border border-slate-200 shadow-2xl">
           <form onSubmit={handleContactSubmit} className="space-y-6">

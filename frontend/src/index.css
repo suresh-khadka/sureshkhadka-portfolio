@@ -25,17 +25,19 @@ body {
   padding: 0;
 }
 
-/* Single Page Scroll Snap - ONLY applied to the container on the Home page */
+/* Single Page Scroll Snap - REMOVED to fix scrolling performance issues */
+/*
 .snap-container {
-  height: 100vh; 
+  height: 100vh;
   overflow-y: auto;
-  scroll-snap-type: y proximity; 
+  scroll-snap-type: y proximity;
   scroll-behavior: smooth;
 }
 
 .snap-section {
   scroll-snap-align: start;
 }
+*/
 
 .page-container {
   @apply max-w-6xl mx-auto px-6 py-12 min-h-screen;
