@@ -119,11 +119,15 @@ const Hero = ({ name, role, photoUrl, socialLinks }: HeroProps) => {
 
   return (
     <section id="hero" className="relative w-full min-h-screen overflow-hidden bg-primary">
+
+
       {/* Photo layer - full background on desktop, hidden on mobile */}
       <img
         src={photoUrl}
         alt={name}
-        className="hidden md:block absolute inset-0 w-full h-full object-cover object-center"
+        // className="hidden md:block absolute inset-0 w-full h-full object-cover object-right"
+        // className="hidden md:block absolute inset-0 w-full h-full object-contain object-right"
+        className="absolute inset-0 w-full h-full object-cover object-center md:left-1/2 md:w-1/2 md:object-[35%_center]"
         style={{ willChange: 'transform' }}
       />
 
@@ -333,11 +337,11 @@ export default function HomePage() {
         role="Aspiring AI,  ML & Data Science Engineer"
         photoUrl="/hero.jpeg"
         socialLinks={{
-          github: "https://github.com/sureshkhadka",
-          linkedin: "https://linkedin.com/in/sureshkhadka",
-          twitter: "https://twitter.com/sureshkhadka",
-          instagram: "https://instagram.com/sureshkhadka",
-          email: "mailto:suresh@example.com"
+          github: "https://github.com/suresh-khadka",
+          linkedin: "www.linkedin.com/in/suresh-khadka-85307731b",
+          twitter: "https://twitter.com",
+          instagram: "https://www.instagram.com/iam_sureshkhadka/?hl=en",
+          email: "mailto:khadkasuresh647@gmail.com"
         }}
       />
 
