@@ -338,7 +338,7 @@ export default function HomePage() {
         photoUrl="/hero.jpeg"
         socialLinks={{
           github: "https://github.com/suresh-khadka",
-          linkedin: "www.linkedin.com/in/suresh-khadka-85307731b",
+          linkedin: "https://www.linkedin.com/in/suresh-khadka-85307731b",
           twitter: "https://twitter.com",
           instagram: "https://www.instagram.com/iam_sureshkhadka/?hl=en",
           email: "mailto:khadkasuresh647@gmail.com"
