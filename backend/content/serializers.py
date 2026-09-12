@@ -13,8 +13,6 @@ class SkillSerializer(serializers.ModelSerializer):
         model = Skill
         fields = ['id', 'name', 'category', 'category_name', 'proficiency_level', 'proficiency', 'icon_url']
 
-# FLAG: 'content' field is potentially very large.
-# Consider splitting into a lightweight list serializer and a detail serializer.
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
