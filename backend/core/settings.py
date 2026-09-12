@@ -82,6 +82,7 @@ DATABASES = {
     "default": env.db(),
 }
 DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
+# CONN_MAX_AGE = 0 - Required for Supabase transaction-mode pooling (port 6543) to avoid session state issues
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

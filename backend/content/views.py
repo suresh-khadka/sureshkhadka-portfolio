@@ -22,7 +22,7 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 class SkillListCreateView(generics.ListCreateAPIView):
-    queryset = Skill.objects.all()
+    queryset = Skill.objects.select_related('category').all()
     serializer_class = SkillSerializer
     permission_classes = [IsAdminOrReadOnly]
 
