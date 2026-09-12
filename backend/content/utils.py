@@ -167,12 +167,14 @@ def parse_notebook_and_save_cells(notebook, notebook_json, supabase):
                     html_out = "".join(data_dict['text/html']) if isinstance(data_dict['text/html'], list) else data_dict['text/html']
 
             if text_out or html_out or error_out or image_out:
-                BlogCellOutput.objects.create(
+                BlogCellOutput.objects.update_or_create(
                     cell=blog_cell,
-                    text_output=text_out,
-                    html_output=html_out,
-                    error_output=error_out,
-                    image_output=image_out
+                    defaults={
+                        'text_output': text_out,
+                        'html_output': html_out,
+                        'error_output': error_out,
+                        'image_output': image_out,
+                    }
                 )
 
 def upload_file_to_supabase(file, folder='portfolio-assets', custom_path=None):

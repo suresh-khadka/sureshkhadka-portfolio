@@ -27,6 +27,7 @@ interface NotebookManagerProps {
 export const NotebookManager: React.FC<NotebookManagerProps> = ({ blogId, sections, onUpdateSections }) => {
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const isUploadingRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -48,6 +49,9 @@ export const NotebookManager: React.FC<NotebookManagerProps> = ({ blogId, sectio
     if (!activeSectionId) return;
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (isUploadingRef.current) return;
+    isUploadingRef.current = true;
 
     setUploading(true);
     const formData = new FormData();
@@ -73,6 +77,7 @@ export const NotebookManager: React.FC<NotebookManagerProps> = ({ blogId, sectio
       alert('Upload failed: ' + (error as any).message);
     } finally {
       setUploading(false);
+      isUploadingRef.current = false;
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };

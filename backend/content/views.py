@@ -207,37 +207,38 @@ class NotebookListCreateView(generics.ListCreateAPIView):
         return Notebook.objects.filter(section_id=section_id).order_by('order')
 
     def perform_create(self, serializer):
-        section = generics.get_object_or_404(BlogSection, id=self.kwargs.get('section_id'))
-        blog = section.blog
+        with transaction.atomic():
+            section = generics.get_object_or_404(BlogSection, id=self.kwargs.get('section_id'))
+            blog = section.blog
 
-        file_obj = self.request.FILES.get('file')
-        if not file_obj:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError({'file': 'No notebook file provided'})
+            file_obj = self.request.FILES.get('file')
+            if not file_obj:
+                from rest_framework.exceptions import ValidationError
+                raise ValidationError({'file': 'No notebook file provided'})
 
-        try:
-            content = json.loads(file_obj.read().decode('utf-8'))
-            file_obj.seek(0)
-            if 'cells' not in content or not isinstance(content['cells'], list):
-                raise ValueError("Invalid Jupyter notebook structure")
-        except (json.JSONDecodeError, ValueError) as e:
-            from rest_framework.exceptions import ValidationError
-            raise ValidationError({'file': str(e)})
+            try:
+                content = json.loads(file_obj.read().decode('utf-8'))
+                file_obj.seek(0)
+                if 'cells' not in content or not isinstance(content['cells'], list):
+                    raise ValueError("Invalid Jupyter notebook structure")
+            except (json.JSONDecodeError, ValueError) as e:
+                from rest_framework.exceptions import ValidationError
+                raise ValidationError({'file': str(e)})
 
-        title = self.request.data.get('title')
-        if not title:
-            title = file_obj.name.replace('.ipynb', '').replace('_', ' ').title()
+            title = self.request.data.get('title')
+            if not title:
+                title = file_obj.name.replace('.ipynb', '').replace('_', ' ').title()
 
-        notebook = serializer.save(section=section, title=title)
+            notebook = serializer.save(section=section, title=title)
 
-        custom_path = f"blogs/{blog.id}/notebooks/{notebook.id}.ipynb"
-        public_url, stored_path = upload_file_to_supabase(file_obj, custom_path=custom_path)
+            custom_path = f"blogs/{blog.id}/notebooks/{notebook.id}.ipynb"
+            public_url, stored_path = upload_file_to_supabase(file_obj, custom_path=custom_path)
 
-        notebook.storage_path = stored_path
-        notebook.save()
+            notebook.storage_path = stored_path
+            notebook.save()
 
-        from .utils import parse_notebook_and_save_cells, get_supabase_client
-        parse_notebook_and_save_cells(notebook, content, get_supabase_client())
+            from .utils import parse_notebook_and_save_cells, get_supabase_client
+            parse_notebook_and_save_cells(notebook, content, get_supabase_client())
 
 class NotebookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Notebook.objects.all()

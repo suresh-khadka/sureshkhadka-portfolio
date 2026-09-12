@@ -40,6 +40,14 @@ interface Blog {
   }[];
 }
 
+// Helper for Roman numerals
+const toRoman = (num: number): string => {
+  const romanMap: { [key: string]: string } = {
+    1: 'i', 2: 'ii', 3: 'iii', 4: 'iv', 5: 'v', 6: 'vi', 7: 'vii', 8: 'viii', 9: 'ix', 10: 'x'
+  };
+  return romanMap[num] || `(${num})`;
+};
+
 export default function BlogDetail() {
   const { slug } = useParams();
   const [blog, setBlog] = useState<Blog | null>(null);
@@ -134,15 +142,27 @@ export default function BlogDetail() {
         <aside className="md:w-64 shrink-0 sticky top-24 -translate-x-6">
           <div className="p-4 bg-secondary rounded-2xl border border-slate-200">
             <h3 className="text-sm font-bold text-text-main uppercase mb-4 border-b border-slate-200 pb-2">Contents</h3>
-            <nav className="space-y-2">
-              {blog.sections.map(section => (
-                <a
-                  key={section.id}
-                  href={`#${section.slug || section.id}`}
-                  className="block text-sm text-text_muted hover:text-accent transition-colors"
-                >
-                  {section.title}
-                </a>
+            <nav className="space-y-3">
+              {blog.sections.map((section, sIdx) => (
+                <div key={section.id} className="space-y-2">
+                  <a
+                    href={`#${section.slug || section.id}`}
+                    className="block text-sm font-bold text-text-main hover:text-accent transition-colors"
+                  >
+                    {sIdx + 1}. {section.title}
+                  </a>
+                  <div className="ml-4 space-y-1">
+                    {section.notebooks.map((nb, nIdx) => (
+                      <a
+                        key={nb.id}
+                        href={`#notebook-${nb.id}`}
+                        className="block text-xs text-text_muted hover:text-accent transition-colors"
+                      >
+                        {toRoman(nIdx + 1)}. {nb.title}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               ))}
             </nav>
           </div>
@@ -157,44 +177,25 @@ export default function BlogDetail() {
                   {section.title}
                 </h2>
                 <div className="space-y-8">
-                  {section.cells && section.cells.length > 0 && (
-                    <div className="space-y-4">
-                      {section.cells.map((cell, idx) => {
-                        if (cell.cell_type === 'markdown') {
-                          return <MarkdownCell key={cell.id || idx} content={cell.content} />;
-                        }
-                        if (cell.cell_type === 'code') {
-                          return (
-                            <StaticCodeCell
-                              key={cell.id || idx}
-                              code={cell.content}
-                              language={cell.language}
-                              outputs={cell.output ? [{
-                                text: cell.output.text_output,
-                                error: cell.output.error_output,
-                                image: cell.output.image_output,
-                              }] : []}
-                            />
-                          );
-                        }
-                        return null;
-                      })}
-                    </div>
-                  )}
+                    {section.notebooks && section.notebooks.length > 0 && (
+                      <div className="space-y-12">
+                        {section.notebooks.map((notebook, nIdx) => (
+                          <div key={notebook.id} id={`notebook-${notebook.id}`} className="space-y-4">
+                            <h3 className="text-xl font-semibold text-text-main flex items-center gap-2">
+                              <span className="text-accent italic">{toRoman(nIdx + 1)}.</span>
+                              {notebook.title}
+                            </h3>
+                            <NotebookContainer key={notebook.id} notebook={notebook} />
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-                  {section.notebooks && section.notebooks.length > 0 && (
-                    <div className="space-y-4">
-                      {section.notebooks.map(notebook => (
-                        <NotebookContainer key={notebook.id} notebook={notebook} />
-                      ))}
-                    </div>
-                  )}
-
-                  {!section.cells?.length && !section.notebooks?.length && (
-                    <div className="p-8 text-center text-text_muted bg-secondary rounded-2xl border border-dashed border-slate-300">
-                      No content available for this section.
-                    </div>
-                  )}
+                    {!section.notebooks?.length && (
+                      <div className="p-8 text-center text-text_muted bg-secondary rounded-2xl border border-dashed border-slate-300">
+                        No content available for this section.
+                      </div>
+                    )}
                 </div>
               </div>
             ))
