@@ -22,7 +22,7 @@ class ProjectDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 class SkillListCreateView(generics.ListCreateAPIView):
-    queryset = Skill.objects.all()
+    queryset = Skill.objects.all().select_related('category')
     serializer_class = SkillSerializer
     permission_classes = [IsAdminOrReadOnly]
 
@@ -36,7 +36,11 @@ class BlogListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        queryset = Blog.objects.filter(is_draft=False).order_by('-published_at')
+        queryset = Blog.objects.filter(is_draft=False).order_by('-published_at').prefetch_related(
+            'tags',
+            'sections__cells__output',
+            'sections__notebooks',
+        )
         tag_slug = self.request.query_params.get('tag')
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)

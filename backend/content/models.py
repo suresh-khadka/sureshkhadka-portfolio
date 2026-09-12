@@ -35,7 +35,7 @@ class Project(models.Model):
     stack = models.JSONField(default=list, blank=True)
     github_url = models.TextField(blank=True, null=True)
     live_url = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
         return self.title
@@ -54,7 +54,7 @@ class Blog(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     intro = models.TextField(blank=True, null=True)
     cover_image_url = models.TextField(blank=True, null=True)
-    published_at = models.DateTimeField(auto_now_add=True)
+    published_at = models.DateTimeField(auto_now_add=True, db_index=True)
     is_draft = models.BooleanField(default=True)
     tags = models.ManyToManyField(Tag, related_name='blogs')
 
