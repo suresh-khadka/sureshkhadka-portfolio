@@ -385,25 +385,13 @@ export default function HomePage() {
             {[1, 2].map(i => <div key={i} className="bg-secondary h-64 rounded-3xl"></div>)}
           </div>
         ) : (
-          <>
-            <div className="block md:hidden flex flex-col gap-12">
-              {skillCategories.map(category => (
-                <CategoryCard key={category} category={category} skills={skills} />
-              ))}
-            </div>
-            <div className="hidden md:flex gap-12 items-start">
-              <div className="flex-1 flex flex-col gap-12">
-                {skillCategories.filter((_, i) => i % 2 === 0).map(category => (
-                  <CategoryCard key={category} category={category} skills={skills} />
-                ))}
+          <div className="columns-1 md:columns-2 gap-12">
+            {skillCategories.map(category => (
+              <div key={category} className="break-inside-avoid mb-12">
+                <CategoryCard category={category} skills={skills} />
               </div>
-              <div className="flex-1 flex flex-col gap-12">
-                {skillCategories.filter((_, i) => i % 2 !== 0).map(category => (
-                  <CategoryCard key={category} category={category} skills={skills} />
-                ))}
-              </div>
-            </div>
-          </>
+            ))}
+          </div>
         )}
       </SectionWrapper>
 
