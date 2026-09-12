@@ -14,18 +14,16 @@ export const useAnalytics = () => {
     }
 
     // 2. Track Page View
-    const trackPageView = async () => {
-      try {
-        await apiClient.post('/track/pageview/', {
-          session_id: sessionId,
-          path: location.pathname,
-          referrer: document.referrer,
-          user_agent: navigator.userAgent,
-          location_summary: 'Unknown', // Browser location API would require user permission
-        });
-      } catch (error) {
+    const trackPageView = () => {
+      apiClient.post('/track/pageview/', {
+        session_id: sessionId,
+        path: location.pathname,
+        referrer: document.referrer,
+        user_agent: navigator.userAgent,
+        location_summary: 'Unknown',
+      }).catch(error => {
         console.error('Analytics PageView Error:', error);
-      }
+      });
     };
 
     trackPageView();
