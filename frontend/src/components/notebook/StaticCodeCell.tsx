@@ -28,9 +28,9 @@ export const StaticCodeCell: React.FC<StaticCodeCellProps> = ({ code, outputs, l
 
       {outputs.map((output, idx) => (
         <React.Fragment key={idx}>
-          {output.text && (
+          {output.text_output && (
             <div className="p-3 rounded-lg bg-black text-green-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
-              {output.text}
+              {output.text_output}
             </div>
           )}
           {output.html && (
@@ -39,14 +39,14 @@ export const StaticCodeCell: React.FC<StaticCodeCellProps> = ({ code, outputs, l
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(output.html) }}
             />
           )}
-          {output.error && (
+          {output.error_output && (
             <div className="p-3 rounded-lg bg-black text-red-400 font-mono text-sm whitespace-pre-wrap border border-slate-700 mb-3">
-              {output.error}
+              {output.error_output}
             </div>
           )}
-          {output.image && (
+          {output.image_output && (
             <div className="mb-3 flex justify-center rounded-lg overflow-hidden border border-slate-300 bg-white">
-              <img src={output.image} alt="Plot output" className="max-w-full h-auto" />
+              <img src={output.image_output} alt="Plot output" className="max-w-full h-auto" />
             </div>
           )}
         </React.Fragment>
