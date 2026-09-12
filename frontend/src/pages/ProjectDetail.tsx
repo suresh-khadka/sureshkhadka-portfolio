@@ -8,8 +8,8 @@ interface Project {
   content: string;
   thumbnail_url: string;
   stack: string[];
-  github_url: string;
-  live_url: string;
+  github_url?: string;
+  live_url?: string;
 }
 
 export default function ProjectDetail() {

@@ -10,6 +10,8 @@ interface Project {
   content: string;
   thumbnail_url: string;
   stack: string[];
+  github_url?: string;
+  live_url?: string;
 }
 
 export const ProjectManager = () => {
@@ -22,6 +24,8 @@ export const ProjectManager = () => {
     content: '',
     thumbnail_url: '',
     stack: '',
+    github_url: '',
+    live_url: '',
   });
   const [uploading, setUploading] = useState(false);
 
@@ -71,7 +75,7 @@ export const ProjectManager = () => {
       } else {
         await apiClient.post('/projects/', data);
       }
-      setFormData({ title: '', slug: '', description: '', content: '', thumbnail_url: '', stack: '' });
+      setFormData({ title: '', slug: '', description: '', content: '', thumbnail_url: '', stack: '', github_url: '', live_url: '' });
       setEditingProject(null);
       fetchProjects();
     } catch (error) {
@@ -98,6 +102,8 @@ export const ProjectManager = () => {
       content: p.content || '',
       thumbnail_url: p.thumbnail_url || '',
       stack: p.stack.join(', '),
+      github_url: p.github_url || '',
+      live_url: p.live_url || '',
     });
   };
 
@@ -152,6 +158,28 @@ export const ProjectManager = () => {
               onChange={e => setFormData({...formData, stack: e.target.value})}
             />
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-text_muted uppercase mb-1">GitHub URL</label>
+              <input
+                type="url"
+                className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
+                placeholder="https://github.com/..."
+                value={formData.github_url}
+                onChange={e => setFormData({...formData, github_url: e.target.value})}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-text_muted uppercase mb-1">Live Demo URL</label>
+              <input
+                type="url"
+                className="w-full bg-primary border border-slate-200 rounded-lg px-3 py-2 text-text-main"
+                placeholder="https://..."
+                value={formData.live_url}
+                onChange={e => setFormData({...formData, live_url: e.target.value})}
+              />
+            </div>
+          </div>
           <div>
             <label className="block text-xs font-bold text-text_muted uppercase mb-1">Thumbnail</label>
             <div className="flex gap-2">
@@ -181,7 +209,7 @@ export const ProjectManager = () => {
             {editingProject && (
               <Button
                 variant="secondary"
-                onClick={() => { setEditingProject(null); setFormData({title:'', slug:'', description:'', content:'', thumbnail_url:'', stack:''}); }}
+                onClick={() => { setEditingProject(null); setFormData({title:'', slug:'', description:'', content:'', thumbnail_url:'', stack:'', github_url:'', live_url:''}); }}
               >
                 Cancel
               </Button>
