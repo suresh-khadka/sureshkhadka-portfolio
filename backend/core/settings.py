@@ -145,4 +145,10 @@ SIMPLE_JWT = {
 }
 
 # CORS Settings
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[])
+DEFAULT_CORS_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://suresh46.com.np',
+    'https://www.suresh46.com.np',
+]
+CORS_ALLOWED_ORIGINS = env.list('ALLOWED_ORIGINS', default=DEFAULT_CORS_ORIGINS)
