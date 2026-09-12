@@ -40,7 +40,14 @@ class BlogListCreateView(generics.ListCreateAPIView):
         tag_slug = self.request.query_params.get('tag')
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)
-        return queryset
+
+        return queryset.prefetch_related(
+            'tags',
+            'sections',
+            'sections__cells',
+            'sections__cells__output',
+            'sections__notebooks'
+        )
 
 class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
