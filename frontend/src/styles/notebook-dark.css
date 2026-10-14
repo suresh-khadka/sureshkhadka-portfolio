@@ -1,0 +1,105 @@
+/* VS Code Jupyter Dark Theme */
+.notebook-dark-theme {
+  background-color: transparent;
+  color: #d4d4d4;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.notebook-dark-theme .notebook-cell {
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s ease;
+  background-color: #252526;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  /* Slightly inset from the 860px article width */
+  width: calc(100% - 2rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.notebook-dark-theme .notebook-cell:hover {
+  border-left-color: #007acc;
+}
+
+
+.notebook-dark-theme .notebook-cell-gutter {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 60px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: #858585;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.notebook-dark-theme .notebook-markdown {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+.notebook-dark-theme .notebook-markdown h1, 
+.notebook-dark-theme .notebook-markdown h2, 
+.notebook-dark-theme .notebook-markdown h3 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.notebook-dark-theme .notebook-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  border: 1px solid #444;
+}
+
+.notebook-dark-theme .notebook-markdown table th, 
+.notebook-dark-theme .notebook-markdown table td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: left;
+  color: #d4d4d4;
+}
+
+.notebook-dark-theme .notebook-markdown table th {
+  background-color: #333;
+  font-weight: bold;
+}
+
+.notebook-dark-theme .notebook-code-block {
+  display: flex;
+  gap: 12px;
+}
+
+.notebook-dark-theme .notebook-code-block .code-container {
+  flex: 1;
+  position: relative;
+}
+
+.notebook-dark-theme .notebook-output-block {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.notebook-dark-theme .notebook-output-block .output-container {
+  flex: 1;
+}
+
+.notebook-dark-theme .notebook-output-content {
+  background-color: transparent;
+  color: #d4d4d4;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  border: none;
+}
+
+.notebook-dark-theme .notebook-output-error {
+  background-color: transparent;
+  color: #f44747;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}

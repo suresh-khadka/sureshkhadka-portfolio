@@ -93,7 +93,7 @@ export const NotebookContainer: React.FC<NotebookContainerProps> = ({ notebook }
 
   return (
     <div className="mb-12">
-      <NotebookRenderer notebookJson={json} />
+      <NotebookRenderer notebookJson={json} storagePath={notebook.storage_path} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { MarkdownCell } from './MarkdownCell';
 import { StaticCodeCell } from './StaticCodeCell';
+import '../../styles/notebook-dark.css';
 
 interface NotebookJson {
   cells: Array<{
@@ -13,14 +14,16 @@ interface NotebookJson {
     }>;
     execution_count?: number;
     metadata?: any;
+    attachments?: Record<string, { data: string; mime_type: string }>;
   }>;
 }
 
 interface NotebookRendererProps {
   notebookJson: NotebookJson;
+  storagePath?: string;
 }
 
-export const NotebookRenderer: React.FC<NotebookRendererProps> = ({ notebookJson }) => {
+export const NotebookRenderer: React.FC<NotebookRendererProps> = ({ notebookJson, storagePath }) => {
   const normalizeOutputs = (outputs: any[]) => {
     if (!outputs) return [];
 
@@ -62,18 +65,19 @@ export const NotebookRenderer: React.FC<NotebookRendererProps> = ({ notebookJson
   };
 
   return (
-    <div className="space-y-4">
+    <div className="notebook-dark-theme space-y-4">
       {notebookJson.cells.map((cell, idx) => {
         const content = Array.isArray(cell.source) ? cell.source.join('') : cell.source;
 
         if (cell.cell_type === 'markdown') {
-          return <MarkdownCell key={idx} content={content} />;
+          return <MarkdownCell key={idx} content={content} attachments={cell.attachments} storagePath={storagePath} />;
         }
 
         if (cell.cell_type === 'code') {
           return (
             <StaticCodeCell
               key={idx}
+              index={idx}
               code={content}
               outputs={normalizeOutputs(cell.outputs || [])}
             />

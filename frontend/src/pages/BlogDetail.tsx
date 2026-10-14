@@ -53,9 +53,25 @@ export default function BlogDetail() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [startTime] = useState(Date.now());
+  const [activeSection, setActiveSection] = useState('');
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const fetchBlog = async () => {
+      // Try to load from pre-built static JSON first
+      try {
+        const response = await fetch(`/data/blogs/${slug}.json`);
+        if (response.ok) {
+          const data = await response.json();
+          setBlog(data);
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        console.warn('Static data not found, falling back to API');
+      }
+
+      // Fallback to API
       try {
         const response = await apiClient.get(`/blogs/${slug}/`);
         setBlog(response.data);
@@ -67,6 +83,28 @@ export default function BlogDetail() {
     };
     fetchBlog();
   }, [slug]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Progress bar
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      setScrollProgress(scrolled);
+
+      // Scroll-spy for TOC
+      const sections = document.querySelectorAll('h2[id]');
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 150) {
+          setActiveSection(section.id);
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const calculateScrollDepth = () => {
@@ -112,6 +150,12 @@ export default function BlogDetail() {
 
   return (
     <div className="page-container max-w-none">
+      {/* Reading Progress Bar */}
+      <div
+        className="fixed top-0 left-0 h-1 bg-accent z-50 transition-all duration-150"
+        style={{ width: `${scrollProgress}%` }}
+      />
+
       <Link to="/blogs" className="text-accent hover:underline mb-8 inline-block">&larr; Back to Blog</Link>
 
       <header className="text-center mb-12">
@@ -126,7 +170,7 @@ export default function BlogDetail() {
           </div>
         </div>
         <img
-          src={blog.cover_image_url || 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%221200%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%2214%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ENo%20Image%20Available%3C%2Ftext%3E%3C%2Fsvg%3E'}
+          src={blog.cover_image_url || 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%221200%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23e2e8f0%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%2214%22%20fill%3D%22%2394a3b8%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ENo%20Image%20Available%3C%2Ftext%3E%3C%2Fsvg%3E'}
           alt={blog.title}
           className="w-full h-auto max-h-[500px] object-cover rounded-3xl shadow-2xl border border-slate-200 mb-8"
         />
@@ -139,7 +183,7 @@ export default function BlogDetail() {
 
       <div className="max-w-[2000px] ml-0 flex flex-col md:flex-row items-start gap-8">
         {/* Table of Contents */}
-        <aside className="md:w-64 shrink-0 sticky top-24 -translate-x-6">
+        <aside className="md:w-64 shrink-0 sticky top-24">
           <div className="p-4 bg-secondary rounded-2xl border border-slate-200">
             <h3 className="text-sm font-bold text-text-main uppercase mb-4 border-b border-slate-200 pb-2">Contents</h3>
             <nav className="space-y-3">
@@ -147,7 +191,11 @@ export default function BlogDetail() {
                 <div key={section.id} className="space-y-2">
                   <a
                     href={`#${section.slug || section.id}`}
-                    className="block text-sm font-bold text-text-main hover:text-accent transition-colors"
+                    className={`block text-sm font-bold transition-colors ${
+                      activeSection === (section.slug || section.id)
+                        ? 'text-accent'
+                        : 'text-text-main hover:text-accent'
+                    }`}
                   >
                     {sIdx + 1}. {section.title}
                   </a>
@@ -156,7 +204,11 @@ export default function BlogDetail() {
                       <a
                         key={nb.id}
                         href={`#notebook-${nb.id}`}
-                        className="block text-xs text-text_muted hover:text-accent transition-colors"
+                        className={`block text-xs transition-colors ${
+                      activeSection === `notebook-${nb.id}`
+                        ? 'text-accent'
+                        : 'text-text_muted hover:text-accent'
+                    }`}
                       >
                         {toRoman(nIdx + 1)}. {nb.title}
                       </a>
