@@ -5,25 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "tsx scripts/prebuild-blog.ts",
-    "build": "vite build && tsx scripts/prerender-blogs.ts",
+    "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest",
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.117.3",
     "@types/dompurify": "^3.0.5",
-    "@types/fs-extra": "^11.0.4",
-    "@types/rss": "^0.0.32",
     "axios": "^1.20.0",
     "dompurify": "^3.4.15",
-    "dotenv": "^18.0.7",
     "framer-motion": "^13.2.0",
-    "fs-extra": "^11.4.1",
     "github-markdown-css": "^5.9.0",
-    "lucide-react": "^0.400.0",
     "pyodide": "^314.0.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -34,10 +27,7 @@
     "recharts": "^3.10.1",
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
-    "remark-math": "^6.0.0",
-    "rss": "^1.2.2",
-    "sitemap": "^9.0.1",
-    "tsx": "^4.23.15"
+    "remark-math": "^6.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

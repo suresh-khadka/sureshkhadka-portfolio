@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Linkedin, Instagram, Mail, Maximize2, X } from 'lucide-react';
+import { Mail, Maximize2, X } from 'lucide-react';
 import { FaGithub, FaTwitter } from 'react-icons/fa';
 import apiClient from '../api/client';
 import { Button } from '../components/Button';
@@ -111,9 +111,7 @@ const Hero = ({ name, role, photoUrl, socialLinks }: HeroProps) => {
 
   const socialIcons = [
     { icon: FaGithub, link: socialLinks.github },
-    { icon: Linkedin, link: socialLinks.linkedin },
     { icon: FaTwitter, link: socialLinks.twitter },
-    { icon: Instagram, link: socialLinks.instagram },
     { icon: Mail, link: socialLinks.email },
   ].filter(item => item.link);
 

@@ -58,20 +58,6 @@ export default function BlogDetail() {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      // Try to load from pre-built static JSON first
-      try {
-        const response = await fetch(`/data/blogs/${slug}.json`);
-        if (response.ok) {
-          const data = await response.json();
-          setBlog(data);
-          setLoading(false);
-          return;
-        }
-      } catch (e) {
-        console.warn('Static data not found, falling back to API');
-      }
-
-      // Fallback to API
       try {
         const response = await apiClient.get(`/blogs/${slug}/`);
         setBlog(response.data);
@@ -85,26 +71,61 @@ export default function BlogDetail() {
   }, [slug]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Progress bar
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      setScrollProgress(scrolled);
+    if (!blog) return;
 
-      // Scroll-spy for TOC
-      const sections = document.querySelectorAll('h2[id]');
-      sections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 150) {
-          setActiveSection(section.id);
-        }
-      });
+    // Page Title and Meta
+    document.title = `${blog.title} | Portfolio`;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', blog.intro || '');
+    }
+
+    // Canonical Link
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', `https://yourdomain.com/blogs/${blog.slug}`);
+
+    // Open Graph Tags
+    const setOGTag = (prop: string, content: string) => {
+      let tag = document.querySelector(`meta[property="${prop}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('property', prop);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    setOGTag('og:title', blog.title);
+    setOGTag('og:description', blog.intro || '');
+    setOGTag('og:type', 'article');
+    setOGTag('og:url', `https://yourdomain.com/blogs/${blog.slug}`);
+
+    // JSON-LD BlogPosting
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": blog.title,
+      "description": blog.intro || '',
+      "datePublished": blog.published_at,
+      "author": {
+        "@type": "Person",
+        "name": "Suresh Khadka"
+      }
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+
+    return () => {
+      if (script) document.head.removeChild(script);
+    };
+  }, [blog]);
 
   useEffect(() => {
     const calculateScrollDepth = () => {
