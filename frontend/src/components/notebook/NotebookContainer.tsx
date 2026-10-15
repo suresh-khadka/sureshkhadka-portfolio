@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NotebookRenderer } from './NotebookRenderer';
+import { useInView } from 'react-intersection-observer';
 
 interface NotebookMetadata {
   id: string;
@@ -13,12 +14,19 @@ interface NotebookContainerProps {
 }
 
 export const NotebookContainer: React.FC<NotebookContainerProps> = ({ notebook }) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: '200px 0px',
+  });
   const [json, setJson] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!inView) return;
+
     const fetchNotebookJson = async () => {
+      setLoading(true);
       try {
         const envBaseUrl = import.meta.env.VITE_SUPABASE_PUBLIC_URL || '';
 
@@ -26,28 +34,17 @@ export const NotebookContainer: React.FC<NotebookContainerProps> = ({ notebook }
           throw new Error("VITE_SUPABASE_PUBLIC_URL is not defined in the environment");
         }
 
-        console.log("DEBUG: Runtime envBaseUrl:", envBaseUrl);
-        console.log("DEBUG: Constructing URL with bucket: portfolio-assets");
-        console.log("DEBUG: Constructing URL with storage_path:", notebook.storage_path);
-
         const storagePathSegment = '/storage/v1/object/public/portfolio-assets';
         const baseUrl = envBaseUrl.includes(storagePathSegment)
           ? envBaseUrl
           : `${envBaseUrl.replace(/\/$/, '')}${storagePathSegment}`;
 
         const notebookUrl = `${baseUrl.replace(/\/$/, '')}/${notebook.storage_path}`;
-        console.log("DEBUG: Final notebookUrl:", notebookUrl);
 
         const response = await fetch(notebookUrl);
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error("Notebook fetch failed", {
-            url: notebookUrl,
-            status: response.status,
-            statusText: response.statusText,
-            response: errorText,
-          });
           throw new Error(`Failed to fetch notebook: ${response.status} ${errorText}`);
         }
 
@@ -56,24 +53,11 @@ export const NotebookContainer: React.FC<NotebookContainerProps> = ({ notebook }
         try {
           data = JSON.parse(text);
         } catch (e) {
-          console.error("Notebook JSON parse failed", {
-            url: notebookUrl,
-            preview: text.slice(0, 200),
-          });
-          throw new Error(`Downloaded notebook is not valid JSON. Preview: ${text.slice(0, 100)}...`);
+          throw new Error(`Downloaded notebook is not valid JSON.`);
         }
 
-        // Validate Jupyter Notebook structure
         if (!data || !Array.isArray(data.cells)) {
           throw new Error("Invalid notebook structure: 'cells' must be an array.");
-        }
-
-        // Deep validation of cells
-        for (let i = 0; i < data.cells.length; i++) {
-          const cell = data.cells[i];
-          if (!cell || typeof cell !== 'object' || !cell.cell_type) {
-            throw new Error(`Invalid notebook structure: Cell at index ${i} is missing 'cell_type'.`);
-          }
         }
 
         setJson(data);
@@ -85,14 +69,15 @@ export const NotebookContainer: React.FC<NotebookContainerProps> = ({ notebook }
     };
 
     fetchNotebookJson();
-  }, [notebook.storage_path]);
+  }, [notebook.storage_path, inView]);
 
-  if (loading) return <div className="py-4 text-sm text-text_muted animate-pulse">Loading notebook...</div>;
-  if (error) return <div className="py-4 text-sm text-red-500 bg-red-50 p-3 rounded-lg border border-red-100">Error: {error}</div>;
-  if (!json) return null;
+  if (!inView && !json) return <div ref={ref} className="py-8 text-center text-text_muted italic">Scroll to load notebook...</div>;
+  if (loading && !json) return <div ref={ref} className="py-4 text-sm text-text_muted animate-pulse">Loading notebook...</div>;
+  if (error) return <div ref={ref} className="py-4 text-sm text-red-500 bg-red-50 p-3 rounded-lg border border-red-100">Error: {error}</div>;
+  if (!json) return <div ref={ref} />;
 
   return (
-    <div className="mb-12">
+    <div ref={ref} className="mb-12">
       <NotebookRenderer notebookJson={json} storagePath={notebook.storage_path} />
     </div>
   );

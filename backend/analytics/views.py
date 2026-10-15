@@ -25,15 +25,15 @@ class TrackPageViewView(APIView):
         if not session_id or not path:
             return Response({'error': 'session_id and path are required'}, status=status.HTTP_400_BAD_REQUEST)
 
-        session, created = VisitorSession.objects.get_or_create(
+        # Optimization: Use update_or_create to reduce queries
+        session, created = VisitorSession.objects.update_or_create(
             session_id=session_id,
             defaults={
                 'user_agent': data.get('user_agent'),
-                'location_summary': data.get('location_summary')
+                'location_summary': data.get('location_summary'),
+                'last_seen': now()
             }
         )
-        session.last_seen = now()
-        session.save()
 
         serializer = PageViewSerializer(data=data)
         if serializer.is_valid():

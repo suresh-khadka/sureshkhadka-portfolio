@@ -22,7 +22,7 @@ export const useAnalytics = () => {
         user_agent: navigator.userAgent,
         location_summary: 'Unknown',
       }).catch(error => {
-        console.error('Analytics PageView Error:', error);
+        // Silent fail for analytics to avoid console noise
       });
     };
 
@@ -30,17 +30,22 @@ export const useAnalytics = () => {
 
     // 3. Heartbeat Mechanism
     // Send a heartbeat every 30 seconds to maintain the session
+    let isMounted = true;
     const heartbeatInterval = setInterval(async () => {
+      if (!isMounted) return;
       try {
         await apiClient.post('/track/heartbeat/', {
           session_id: sessionId,
         });
       } catch (error) {
-        console.error('Analytics Heartbeat Error:', error);
+        // Silent fail for analytics to avoid console noise
       }
     }, 30000);
 
-    return () => clearInterval(heartbeatInterval);
+    return () => {
+      isMounted = false;
+      clearInterval(heartbeatInterval);
+    };
   }, [location]);
 
   return {

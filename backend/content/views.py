@@ -6,7 +6,10 @@ from django.db import transaction
 import json
 import uuid
 from .models import Project, Skill, Blog, BlogSection, BlogCell, BlogCellOutput, Notebook, Link, Tag
-from .serializers import ProjectSerializer, SkillSerializer, BlogSerializer, BlogSectionSerializer, BlogCellSerializer, NotebookSerializer, LinkSerializer, TagSerializer
+from .serializers import (
+    ProjectSerializer, SkillSerializer, BlogSerializer, BlogSummarySerializer,
+    BlogSectionSerializer, BlogCellSerializer, NotebookSerializer, LinkSerializer, TagSerializer
+)
 from .permissions import IsAdminOrReadOnly
 from .utils import upload_file_to_supabase, delete_file_from_supabase
 
@@ -32,7 +35,7 @@ class SkillDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 class BlogListCreateView(generics.ListCreateAPIView):
-    serializer_class = BlogSerializer
+    serializer_class = BlogSummarySerializer
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
@@ -41,13 +44,7 @@ class BlogListCreateView(generics.ListCreateAPIView):
         if tag_slug:
             queryset = queryset.filter(tags__slug=tag_slug)
 
-        return queryset.prefetch_related(
-            'tags',
-            'sections',
-            'sections__cells',
-            'sections__cells__output',
-            'sections__notebooks'
-        )
+        return queryset.prefetch_related('tags')
 
 class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Blog.objects.all()
@@ -78,8 +75,17 @@ class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         if self.request.user and self.request.user.is_superuser:
-            return Blog.objects.all()
-        return Blog.objects.filter(is_draft=False)
+            queryset = Blog.objects.all()
+        else:
+            queryset = Blog.objects.filter(is_draft=False)
+
+        return queryset.prefetch_related(
+            'tags',
+            'sections',
+            'sections__cells',
+            'sections__cells__output',
+            'sections__notebooks'
+        )
 
 class BlogSyncView(APIView):
     permission_classes = [IsAdminOrReadOnly]

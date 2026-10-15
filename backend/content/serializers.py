@@ -63,6 +63,13 @@ class BlogSerializer(serializers.ModelSerializer):
         model = Blog
         fields = ['id', 'title', 'slug', 'intro', 'cover_image_url', 'published_at', 'is_draft', 'tags', 'sections']
 
+class BlogSummarySerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'slug', 'intro', 'cover_image_url', 'published_at', 'tags']
+
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
